@@ -33,14 +33,17 @@ var psY=200;
 var isoCells = [];
 var gridX = 9;
 var gridY = 11;
-var areaX = 16*gridX;
-var areaY = 16*gridY;
-var gDim = areaX/gridX
+var areaX = 17*gridX;
+var areaY = 8*gridY;
+var gDimX = areaX/gridX
+var gDimY = areaY/gridY
+
+let isoArea = null;
 
 //Images and sprites
 const sparkImg = new Image(); 
 sparkImg.src = 'res/sprk.png';
-const grndImg1 = new Image();   //9x11
+const grndImg1 = new Image();   //9x18
 grndImg1.src = 'res/gnd1.png';
 const grndImg2 = new Image(); 
 grndImg2.src = 'res/gnd2.png';
@@ -61,17 +64,29 @@ function InitGameState() {
         dy: mvY,
     });
 
-    //init iso grid
-    for (let i=0; i<gridX; i++) {
-        for (let j=0; j<gridY; j++) {
-            CreateIsoGrid(i*gDim,j*gDim);
-            console.log('Created iso tile at [' + i*gDim + ', ' + j*gDim +']');
-        }
-    }
 
 }
 
-function CreateIsoGrid(xIn, yIn) {
+function BuildIsoGrid() {
+    isoArea = Sprite({ 
+        x:40,
+        y:40,
+        width:areaX,
+        height:areaY
+
+    });
+
+    
+    //init iso grid
+    for (let i=0; i<gridX; i++) {
+        for (let j=0; j<gridY; j++) {
+            CreateIsoElement(i*gDimX,j*gDimY);
+            console.log('Created iso tile at [' + i*gDimX + ', ' + j*gDimY +']');
+        }
+    }
+}
+
+function CreateIsoElement(xIn, yIn) {
 
     const isoSQR = Sprite({
         x:xIn,
@@ -81,7 +96,7 @@ function CreateIsoGrid(xIn, yIn) {
 
     track(isoSQR);
     isoCells.push(isoSQR);
-
+    isoArea.addChild(isoSQR);
 }
 
 function GameUpdate() {
@@ -119,8 +134,11 @@ const loop = GameLoop({
 
         if(gameState == 0) { //Start
             if(stateInit == false) {
-                stateInit = true;
                 InitGameState();
+                
+                BuildIsoGrid();
+                
+                stateInit = true;
             }
             GameUpdate();
         }else if (gameState == 1) { //Tutorial
@@ -136,6 +154,10 @@ const loop = GameLoop({
             plSpark.render();
         }
 
+        if(isoArea) {
+            isoArea.render();
+
+        }
 
     }
 });
