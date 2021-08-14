@@ -13,6 +13,8 @@ const { init, GameLoop, Button, Sprite, initPointer, track, bindKeys } = kontra;
 //Get components
 const { canvas, context } = init();
 
+const renderIMG = document.getElementById('renderIMG');
+
 initPointer();
 kontra.initKeys();
 
@@ -23,7 +25,7 @@ kontra.initKeys();
 //3 = Death 
 var gameState = 0;
 var stateInit = false;
-var plSpt_tog = false;
+var plSpt_tog = true; //false = player
 
 //Player stuff
 var plSpark = null;
@@ -33,20 +35,25 @@ var psX=200;
 var psY=200;
 
 var isoSpt = null;
-var spX = 307;
+var spX = 299;
 var spY = 187;
 
 
 //Isometric stuff 
 var isoCells = [];
+var chkX = 32;
+var chunk0 = new Array(chkX);
 //number of elements
-var gridX = 16;
+var gridX = 8;
 var gridY = 32;
 //size of sprite
 var isoX = 34; //18
 var isoY = 8; //9 
 
 let isoArea = null;
+
+var blockCells = [];
+var blockTest = null;
 
 //Images and sprites
 const sparkImg = new Image(); 
@@ -57,6 +64,8 @@ const grndImg2 = new Image();
 grndImg2.src = 'res/gnd2.png';
 const grndImg2HL = new Image(); 
 grndImg2HL.src = 'res/gnd2HL.png';
+const blkImg = new Image(); 
+blkImg.src = 'res/blok1.png';
 
 /////////////////////////////////////////////////////
 //GAME FUNCTIONS
@@ -73,7 +82,6 @@ function InitGameState() {
         dx: mvX,
         dy: mvY,
     });
-
     //init debug locator
     isoSpt = Sprite({ 
         x:spX,
@@ -86,17 +94,36 @@ function InitGameState() {
 
         }
     });
-
     
     BuildIsoGrid();
-                
+
+    CreateChunk();
+         
+    GenerateBuildings(204, 126);
+    GenerateBuildings(221, 134);
+    GenerateBuildings(189, 134);
+    GenerateBuildings(205, 142);
+       
     stateInit = true;
     
 }
 
+function GenerateBuildings(bX, bY) {
+    blockTest = Sprite({ 
+        x:bX,
+        y:bY,
+        width:4,
+        height:4,
+        image: blkImg,
+    });
+
+    blockCells.push(blockTest);
+    isoArea.addChild(blockTest);
+
+}
 function BuildIsoGrid() {
     isoArea = Sprite({ 
-        x:36,
+        x:166,
         y:28,
         width:gridX*isoX,
         height:gridY*isoY,
@@ -126,25 +153,52 @@ function CreateIsoElement(xIn, yIn) {
     const isoSQR = Sprite({
         x:xIn,
         y:yIn,
+        width:0,
         image:grndImg1,
 
         onDown() {
-            this.image = grndImg2HL;
+            this.image = grndImg2;
+            this.width = 1;
+            console.log('width: ' + this.width);
         },
         onUp() {
-            this.image = grndImg1;
+            this.image = grndImg2HL;
         },
         onOver() {
-            this.image = grndImg2;
+            if(this.width == 0) {
+                this.image = grndImg2;
+            }
         },
         onOut: function() {
-            this.image = grndImg1;            
+            if(this.width == 0) {
+                this.image = grndImg1;
+            }
         }
     });
 
     track(isoSQR);
     isoCells.push(isoSQR);
     isoArea.addChild(isoSQR);
+}
+
+function CreateChunk() {
+    //init array
+    // for (var i=0; i< chunk0.length; i++) {
+    //     chunk0[i] = new Array(chkX);
+    // }
+    // console.log(chunk0);
+
+    //var dat = blkImg.data;
+    //console.log(dat[8]);
+
+    renderIMG.width = 256;
+    renderIMG.height = 128;
+
+    renderIMG.addEventListener('contextmenu', function (e) {
+        var dataURL = canvas.toDataURL('image/png');
+        renderIMG.src = dataURL;
+    });
+
 }
 
 function GameUpdate() {
@@ -158,6 +212,10 @@ function GameUpdate() {
     if(plSpark) {
         plSpark.update();
 
+        var num = Math.floor(Math.random() * 3) - 1;
+        plSpark.x += num/10;
+        num = Math.floor(Math.random() * 3) - 1;
+        plSpark.y += num/10;
         //console.log('position debug: [' + plSpark.x + ', ' + plSpark.y + ']');
     }
 
@@ -183,13 +241,13 @@ const loop = GameLoop({
     },
     render: () => {
 
+        if(isoSpt) {
+            isoSpt.render();
+        }
+
         if(isoArea) {
             isoArea.render();
 
-        }
-
-        if(isoSpt) {
-            isoSpt.render();
         }
 
         if(plSpark) {
@@ -210,7 +268,7 @@ loop.start();
 ////////////////////////////////////////////////////
 bindKeys(['left', 'a'], function(e) {
     if(plSpt_tog) {
-        spX -= 1;
+        spX -= isoX;
         isoSpt.x = spX;
     } else {
         mvX -= 0.1;
@@ -220,7 +278,7 @@ bindKeys(['left', 'a'], function(e) {
 
 bindKeys(['right', 'd'], function(e) {
     if(plSpt_tog) {
-        spX += 1;
+        spX += isoX;
         isoSpt.x = spX;
     } else {
         mvX += 0.1;
@@ -230,7 +288,7 @@ bindKeys(['right', 'd'], function(e) {
 
 bindKeys(['up', 'w'], function(e) {
     if(plSpt_tog) {
-        spY += 1;
+        spY -= isoY*2;
         isoSpt.y = spY;
     } else {
         mvY -= 0.1;
@@ -240,7 +298,7 @@ bindKeys(['up', 'w'], function(e) {
 
 bindKeys(['down', 's'], function(e) {
     if(plSpt_tog) {
-        spY -= 1;
+        spY += isoY*2;
         isoSpt.y = spY;
     } else {
         mvY += 0.1;
@@ -248,7 +306,10 @@ bindKeys(['down', 's'], function(e) {
     }
 }, 'keyup');
 
-
+//toggle
+bindKeys(['t'], function(e) {
+    plSpt_tog = !plSpt_tog;
+}, 'keyup');
 
 /////////////////////////////////////////////////////
 //MUSIC/SFX

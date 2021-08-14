@@ -1,0 +1,6 @@
+.canvas_image {
+    left: 10px;
+    position: absolute;
+    top: 400px;
+    background-color: blue;
+}
