@@ -97,7 +97,7 @@ function InitGameState() {
     
     BuildIsoGrid();
 
-    CreateChunk();
+    InitCreateChunk();
          
     GenerateBuildings(204, 126);
     GenerateBuildings(221, 134);
@@ -186,29 +186,61 @@ function CreateIsoElement(xIn, yIn) {
     isoArea.addChild(isoSQR);
 }
 
-function CreateChunk() {
+let ix = 0;
+let jy = 0;
+let timer = 0.1;
+
+function RunTestChunk() {
+
+    if(timer <= 0) {
+        if(ix < chkX) {
+            rdCTX.fillRect( ix, jy, 1, 1 );
+            timer = 0.0
+            ix++;
+        } else { //reset 
+            jy += 1;
+            ix = 0;
+        }
+    } else {
+        timer -= 0.1;
+    }
+}
+let rdCTX = renderIMG.getContext('2d');
+
+function InitCreateChunk() {
     //create image
     renderIMG.width = 32;
     renderIMG.height = 32;
 
-    var rdCTX = renderIMG.getContext('2d');
     //rdCTX.drawImage(blkImg, 0, 0);
 
-    var data = rdCTX.getImageData(0,0,32,32).data;
-    console.log("pixel data out: " + data[0]);
+    // var data = rdCTX.getImageData(0,0,32,32).data;
+    // console.log("pixel data out: " + data[0]);
 
     //draw pixel
     rdCTX.fillStyle = "rgba("+155+","+155+","+255+","+(255/255)+")";
-    rdCTX.fillRect( 0, 0, 1, 1 );
-
+    // rdCTX.fillRect( 0, 0, 1, 1 );
+    // rdCTX.fillRect( 1, 0, 1, 1 );
+    // rdCTX.fillRect( 2, 0, 1, 1 );
+    // rdCTX.fillRect( 3, 0, 1, 1 );
+    // rdCTX.fillRect( 28, 0, 1, 1 );
+    // rdCTX.fillRect( 29, 0, 1, 1 );
+    // rdCTX.fillRect( 30, 0, 1, 1 );
+    // rdCTX.fillRect( 31, 0, 1, 1 );
 
     var data = rdCTX.getImageData(0,0,32,32).data;
-    for(let i=0; i < 10; i++) {
-        console.log("pixel data out: " + data[i]);
+    // for(let i=0; i < 10; i++) {
+    //     console.log("pixel data out: " + data[i]);
+    // }
+
+
+    for(let i=0; i < chkX; i++) {
+        for(let j=0; j < chkX; j++) {
+            //console.log("pixel data out: " + data[i]);
+        }    
+
     }
 
-    //var pixData = renderIMG.getImageData(0,0,32,32);
-    //console.log('pixel 0: ' + pixData[0]);
 
     //generate pixel data
 
@@ -263,6 +295,8 @@ const loop = GameLoop({
                 InitGameState();
             }
             GameUpdate();
+
+            RunTestChunk();
         }else if (gameState == 1) { //Tutorial
         }else if (gameState == 2) {
         }else if (gameState == 3) {
