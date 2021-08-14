@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////
 
 //Initial import
-const { init, GameLoop, Button, Sprite, initPointer, track } = kontra;
+const { init, GameLoop, Button, Sprite, initPointer, track, bindKeys } = kontra;
 
 //Get components
 const { canvas, context } = init();
@@ -23,6 +23,7 @@ kontra.initKeys();
 //3 = Death 
 var gameState = 0;
 var stateInit = false;
+var plSpt_tog = false;
 
 //Player stuff
 var plSpark = null;
@@ -30,6 +31,11 @@ var mvX=0;
 var mvY=0;
 var psX=200;
 var psY=200;
+
+var isoSpt = null;
+var spX = 307;
+var spY = 187;
+
 
 //Isometric stuff 
 var isoCells = [];
@@ -40,8 +46,6 @@ var gridY = 32;
 var isoX = 34; //18
 var isoY = 8; //9 
 
-var plSpark = null;
-var gridSpt = null;
 let isoArea = null;
 
 //Images and sprites
@@ -70,15 +74,33 @@ function InitGameState() {
         dy: mvY,
     });
 
+    //init debug locator
+    isoSpt = Sprite({ 
+        x:spX,
+        y:spY,
+        width:4,
+        height:4,
+        color: 'white',
+
+        update() {
+
+        }
+    });
+
+    
+    BuildIsoGrid();
+                
+    stateInit = true;
+    
 }
 
 function BuildIsoGrid() {
     isoArea = Sprite({ 
-        x:40,
-        y:40,
+        x:36,
+        y:28,
         width:gridX*isoX,
         height:gridY*isoY,
-        color: '#333333',
+        //color: '#333333',
 
     });
     let offS = 0;
@@ -127,25 +149,14 @@ function CreateIsoElement(xIn, yIn) {
 
 function GameUpdate() {
 
+    if(isoSpt) {
+        isoSpt.update();
+
+    }
+
+
     if(plSpark) {
         plSpark.update();
-
-        if(kontra.keyPressed('left')) {
-            mvX -= 0.01;
-            plSpark.dx = mvX;
-        }
-        if(kontra.keyPressed('right')) {
-            mvX += 0.01;
-            plSpark.dx = mvX;
-        }
-        if(kontra.keyPressed('up')) {
-            mvY -= 0.01;
-            plSpark.dy = mvY;
-        }
-        if(kontra.keyPressed('down')) {
-            mvY += 0.01;
-            plSpark.dy = mvY;
-        }
 
         //console.log('position debug: [' + plSpark.x + ', ' + plSpark.y + ']');
     }
@@ -161,10 +172,6 @@ const loop = GameLoop({
         if(gameState == 0) { //Start
             if(stateInit == false) {
                 InitGameState();
-                
-                BuildIsoGrid();
-                
-                stateInit = true;
             }
             GameUpdate();
         }else if (gameState == 1) { //Tutorial
@@ -179,6 +186,10 @@ const loop = GameLoop({
         if(isoArea) {
             isoArea.render();
 
+        }
+
+        if(isoSpt) {
+            isoSpt.render();
         }
 
         if(plSpark) {
@@ -197,7 +208,45 @@ loop.start();
 /////////////////////////////////////////////////////
 //BUTTONS/INPUT
 ////////////////////////////////////////////////////
+bindKeys(['left', 'a'], function(e) {
+    if(plSpt_tog) {
+        spX -= 1;
+        isoSpt.x = spX;
+    } else {
+        mvX -= 0.1;
+        plSpark.dx = mvX;
+    }
+}, 'keyup');
 
+bindKeys(['right', 'd'], function(e) {
+    if(plSpt_tog) {
+        spX += 1;
+        isoSpt.x = spX;
+    } else {
+        mvX += 0.1;
+        plSpark.dx = mvX;
+    }
+}, 'keyup');
+
+bindKeys(['up', 'w'], function(e) {
+    if(plSpt_tog) {
+        spY += 1;
+        isoSpt.y = spY;
+    } else {
+        mvY -= 0.1;
+        plSpark.dy = mvY;
+    }
+}, 'keyup');
+
+bindKeys(['down', 's'], function(e) {
+    if(plSpt_tog) {
+        spY -= 1;
+        isoSpt.y = spY;
+    } else {
+        mvY += 0.1;
+        plSpark.dy = mvY;
+    }
+}, 'keyup');
 
 
 
