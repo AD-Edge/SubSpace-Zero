@@ -24,20 +24,24 @@ kontra.initKeys();
 var gameState = 0;
 var stateInit = false;
 
+//Player stuff
 var plSpark = null;
 var mvX=0;
 var mvY=0;
 var psX=200;
 var psY=200;
 
+//Isometric stuff 
 var isoCells = [];
-var gridX = 9;
-var gridY = 11;
-var areaX = 17*gridX;
-var areaY = 8*gridY;
-var gDimX = areaX/gridX
-var gDimY = areaY/gridY
+//number of elements
+var gridX = 16;
+var gridY = 32;
+//size of sprite
+var isoX = 34; //18
+var isoY = 8; //9 
 
+var plSpark = null;
+var gridSpt = null;
 let isoArea = null;
 
 //Images and sprites
@@ -47,6 +51,8 @@ const grndImg1 = new Image();   //9x18
 grndImg1.src = 'res/gnd1.png';
 const grndImg2 = new Image(); 
 grndImg2.src = 'res/gnd2.png';
+const grndImg2HL = new Image(); 
+grndImg2HL.src = 'res/gnd2HL.png';
 
 /////////////////////////////////////////////////////
 //GAME FUNCTIONS
@@ -64,34 +70,54 @@ function InitGameState() {
         dy: mvY,
     });
 
-
 }
 
 function BuildIsoGrid() {
     isoArea = Sprite({ 
         x:40,
         y:40,
-        width:areaX,
-        height:areaY
+        width:gridX*isoX,
+        height:gridY*isoY,
+        color: '#333333',
 
     });
-
+    let offS = 0;
     
     //init iso grid
-    for (let i=0; i<gridX; i++) {
-        for (let j=0; j<gridY; j++) {
-            CreateIsoElement(i*gDimX,j*gDimY);
-            console.log('Created iso tile at [' + i*gDimX + ', ' + j*gDimY +']');
+    for (let i=0; i<gridY; i++) {
+        for (let j=0; j<gridX; j++) {
+            CreateIsoElement((j+offS)*isoX,(i)*isoY);
+            //CreateIsoElement((i*(gDimX) + (offS*gridX) ), j*gDimY-(offS*gridY/2));
+            //CreateIsoElement(i*gDimX, j*gDimY);
+            //console.log('Created iso tile at [' + i*gDimX + ', ' + j*gDimY +']');
+        }
+        //toggle offset
+        if(offS == 0) {
+            offS = 0.5;
+        } else if (offS == 0.5) {
+            offS = 0;
         }
     }
 }
 
 function CreateIsoElement(xIn, yIn) {
-
     const isoSQR = Sprite({
         x:xIn,
         y:yIn,
-        image:grndImg1,    
+        image:grndImg1,
+
+        onDown() {
+            this.image = grndImg2HL;
+        },
+        onUp() {
+            this.image = grndImg1;
+        },
+        onOver() {
+            this.image = grndImg2;
+        },
+        onOut: function() {
+            this.image = grndImg1;            
+        }
     });
 
     track(isoSQR);
@@ -150,13 +176,13 @@ const loop = GameLoop({
     },
     render: () => {
 
-        if(plSpark) {
-            plSpark.render();
-        }
-
         if(isoArea) {
             isoArea.render();
 
+        }
+
+        if(plSpark) {
+            plSpark.render();
         }
 
     }
