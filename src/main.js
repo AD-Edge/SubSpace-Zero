@@ -158,10 +158,15 @@ function CreateIsoElement(xIn, yIn) {
 
         onDown() {
             this.image = grndImg2;
-            this.width = 1;
+            
             console.log('width: ' + this.width);
         },
         onUp() {
+            if(this.width == 0) {
+                this.width = 1;
+            } else {
+                this.width = 0;
+            }
             this.image = grndImg2HL;
         },
         onOver() {
@@ -182,18 +187,44 @@ function CreateIsoElement(xIn, yIn) {
 }
 
 function CreateChunk() {
-    //init array
-    // for (var i=0; i< chunk0.length; i++) {
-    //     chunk0[i] = new Array(chkX);
-    // }
-    // console.log(chunk0);
+    //create image
+    renderIMG.width = 32;
+    renderIMG.height = 32;
 
-    //var dat = blkImg.data;
-    //console.log(dat[8]);
+    var rdCTX = renderIMG.getContext('2d');
+    //rdCTX.drawImage(blkImg, 0, 0);
 
+    var data = rdCTX.getImageData(0,0,32,32).data;
+    console.log("pixel data out: " + data[0]);
+
+    //draw pixel
+    rdCTX.fillStyle = "rgba("+155+","+155+","+255+","+(255/255)+")";
+    rdCTX.fillRect( 0, 0, 1, 1 );
+
+
+    var data = rdCTX.getImageData(0,0,32,32).data;
+    for(let i=0; i < 10; i++) {
+        console.log("pixel data out: " + data[i]);
+    }
+
+    //var pixData = renderIMG.getImageData(0,0,32,32);
+    //console.log('pixel 0: ' + pixData[0]);
+
+    //generate pixel data
+
+    //as its iterating, add objects to render objects 
+
+    //need some kind of 2nd array for game objects, render both at once for ordering?
+
+}
+
+//lets you export the image to a renderIMG & save
+function AddImageSaver() {
     renderIMG.width = 256;
     renderIMG.height = 128;
 
+    //var button = document.getElementById('btn-download');
+    // button.addEventListener('click', function (e) {
     renderIMG.addEventListener('contextmenu', function (e) {
         var dataURL = canvas.toDataURL('image/png');
         renderIMG.src = dataURL;
