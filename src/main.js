@@ -188,14 +188,17 @@ function CreateIsoElement(xIn, yIn) {
 
 let ix = 0;
 let jy = 0;
-let timer = 0.1;
+let timer = 0;
 
 function RunTestChunk() {
 
     if(timer <= 0) {
         if(ix < chkX) {
+            
+            //could loop draw a whole line here 
+
             rdCTX.fillRect( ix, jy, 1, 1 );
-            timer = 0.0
+            timer = 0
             ix++;
         } else { //reset 
             jy += 1;
