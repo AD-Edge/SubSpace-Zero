@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////
 
 //Initial import
-const { init, GameLoop, Button, Sprite, initPointer, track, bindKeys } = kontra;
+const { init, GameLoop, Button, Sprite, initPointer, track, bindKeys, Text } = kontra;
 
 //Get components
 const { canvas, context } = init();
@@ -43,13 +43,17 @@ var isoCells = [];
 var chkX = 32;
 var chunk0 = new Array(chkX);
 //number of elements
-var gridX = 8;
-var gridY = 32;
+var gridX = 16;
+var gridY = 16;
 //size of sprite
-var isoX = 34; //18
-var isoY = 8; //9 
+var isoX = 16; //18
+var isoY = 9; //9 
 
 let isoArea = null;
+let screenArea = null;
+let sideUIL = null;
+let sideUIR = null;
+let sideUIB = null;
 
 var blockCells = [];
 var blockTest = null;
@@ -93,16 +97,58 @@ function InitGameState() {
 
         }
     });
+
+    sideUIR = Sprite({
+        type: 'obj',
+        x: canvas.width - canvas.width/5,
+        color: 'grey',
+        width: canvas.width/5,
+        height: canvas.height,
+    });
+    sideUIL = Sprite({
+        type: 'obj',
+        x: 0,
+        color: 'grey',
+        width: canvas.width/5,
+        height: canvas.height,
+    });
+    sideUIB = Sprite({ 
+        type: 'obj',
+        x: 0,
+        y: canvas.height - canvas.height/10,
+        color: '#333333',
+        width: canvas.width,
+        height: canvas.height/10,
+    });
+    
+    let textW = Text({
+        text: 'UI Temp',
+        font: '16px Arial bold',
+        color: 'black',
+        x: 60,
+        y: 20,
+        anchor: {x: 0.5, y:0.5},
+        textAlign: 'center'
+    });
+    sideUIL.addChild(textW);
     
     BuildIsoGrid();
 
     InitCreateChunk();
          
-    GenerateBuildings(204, 126);
-    GenerateBuildings(221, 134);
-    GenerateBuildings(189, 134);
-    GenerateBuildings(205, 142);
-       
+    //9,7
+    var pos = ConvertISOToScreenPos(isoArea, 6, 6);
+    GenerateBuildings(pos[0], pos[1]);
+    //10,7
+    pos = ConvertISOToScreenPos(isoArea, 7, 6);
+    GenerateBuildings(pos[0], pos[1]);
+    //9,8
+    pos = ConvertISOToScreenPos(isoArea, 6, 7);
+    GenerateBuildings(pos[0], pos[1]);
+    //10,8
+    pos = ConvertISOToScreenPos(isoArea, 7, 7);
+    GenerateBuildings(pos[0], pos[1]);
+
     stateInit = true;
     
 }
@@ -120,12 +166,22 @@ function GenerateBuildings(bX, bY) {
     isoArea.addChild(blockTest);
 
 }
+
 function BuildIsoGrid() {
+    screenArea = Sprite({ 
+        x:0,
+        y:0,
+        width:canvas.width,
+        height:canvas.height,
+        color: '#FF3333',
+
+    });
+
     isoArea = Sprite({ 
-        x:166,
-        y:28,
-        width:gridX*isoX,
-        height:gridY*isoY,
+        x:150,
+        y:10,
+        width:gridX*(isoX*2),
+        height:gridY*(isoY*2),
         //color: '#333333',
 
     });
@@ -134,10 +190,15 @@ function BuildIsoGrid() {
     //init iso grid
     for (let i=0; i<gridY; i++) {
         for (let j=0; j<gridX; j++) {
-            CreateIsoElement((j+offS)*isoX,(i)*isoY);
+
+            let pos = ConvertISOToScreenPos(isoArea, i, j);
+            CreateIsoElement(pos[0], pos[1]);
+            //console.log(pos[0]);
+
+            //CreateIsoElement((j+offS)*isoX,(i)*isoY);
             //CreateIsoElement((i*(gDimX) + (offS*gridX) ), j*gDimY-(offS*gridY/2));
             //CreateIsoElement(i*gDimX, j*gDimY);
-            //console.log('Created iso tile at [' + i*gDimX + ', ' + j*gDimY +']');
+            //console.log('Created iso tile at [' + pos[0] + ', ' + pos[1] +']');
         }
         //toggle offset
         if(offS == 0) {
@@ -148,12 +209,29 @@ function BuildIsoGrid() {
     }
 }
 
-//takes in X/Y of Area
-//finds relative isometric location of points xC/yC
-function ConvertScreenPosToISO(xA, yA, xC, yC) {
+//Takes in Area for location 0,0 & local isometric point
+//Finds GLOBAL (screen) location of points xC/yC
+function ConvertISOToScreenPos(area, xL, yL) {
+
+    //calculate x offset into isometric
+    var xGlb = area.x + (xL-yL) * isoX;
+    //calculate y offset into isometric
+    var yGlb = area.y + (xL+yL) * isoY;
     
+    return [xGlb, yGlb];
 
+}
 
+//Takes in area for location 0,0 and global point
+//Finds LOCAL (isometric) location of point
+function ConvertScreenToISOPos(area, GlX, GlY) {
+
+    //calculate x
+    var xISO = ((GlY / area.y) / isoY + (GlX - area.x) / isoX) / 2;
+    //calculate y
+    var yISO = ((GlY / area.y) / isoY - (GlX - area.x) / isoX) / 2;
+    
+    return [xISO, yISO];
 
 }
 
@@ -166,8 +244,6 @@ function CreateIsoElement(xIn, yIn) {
 
         onDown() {
             this.image = grndImg2;
-            
-            console.log('width: ' + this.width);
         },
         onUp() {
             if(this.width == 0) {
@@ -284,6 +360,27 @@ function AddImageSaver() {
 
 }
 
+//Handle mouse movement
+canvas.addEventListener('mousemove', event =>
+{
+    let bound = canvas.getBoundingClientRect();
+
+    let xM = event.clientX - bound.left - canvas.clientLeft;
+    let yM = event.clientY - bound.top - canvas.clientTop;
+
+    //context.fillRect(xM, yM, 16, 16);
+    
+    //let pos = ConvertISOToScreenPos(screenArea, xM, yM);
+
+    var xTest = parseInt(xM/(isoX/16));
+    var yTest = parseInt(yM/(isoY/9));
+
+    isoSpt.x = xM;
+    isoSpt.y = yM;
+
+    console.log(xTest + ", " + yTest);
+});
+
 function GameUpdate() {
 
     if(isoSpt) {
@@ -315,7 +412,6 @@ const loop = GameLoop({
                 InitGameState();
             }
             GameUpdate();
-
             RunTestChunk();
         }else if (gameState == 1) { //Tutorial
         }else if (gameState == 2) {
@@ -338,6 +434,10 @@ const loop = GameLoop({
         if(plSpark) {
             plSpark.render();
         }
+
+        sideUIL.render();
+        sideUIR.render();
+        sideUIB.render();
 
     }
 });
