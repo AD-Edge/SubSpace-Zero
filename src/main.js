@@ -2,7 +2,6 @@
 //By Alex Delderfield    //
 //          2021         //
 
-
 ////////////////////////////////////////////////////
 //INITILIZATIONS
 ////////////////////////////////////////////////////
@@ -149,6 +148,15 @@ function BuildIsoGrid() {
     }
 }
 
+//takes in X/Y of Area
+//finds relative isometric location of points xC/yC
+function ConvertScreenPosToISO(xA, yA, xC, yC) {
+    
+
+
+
+}
+
 function CreateIsoElement(xIn, yIn) {
     const isoSQR = Sprite({
         x:xIn,
@@ -189,12 +197,22 @@ function CreateIsoElement(xIn, yIn) {
 let ix = 0;
 let jy = 0;
 let timer = 0;
+let rdCTX = renderIMG.getContext('2d');
 
 function RunTestChunk() {
 
+
+    //if init, generate roads
+    //min-max of roads connecting to other chunks? experiment with values
+
+    //generate locations of building blocks along side roads
+
+    //generate sub blocks, along side building, locate away from roads
+
+
     if(timer <= 0) {
         if(ix < chkX) {
-            
+
             //could loop draw a whole line here 
 
             rdCTX.fillRect( ix, jy, 1, 1 );
@@ -208,7 +226,6 @@ function RunTestChunk() {
         timer -= 0.1;
     }
 }
-let rdCTX = renderIMG.getContext('2d');
 
 function InitCreateChunk() {
     //create image
@@ -221,7 +238,7 @@ function InitCreateChunk() {
     // console.log("pixel data out: " + data[0]);
 
     //draw pixel
-    rdCTX.fillStyle = "rgba("+155+","+155+","+255+","+(255/255)+")";
+    rdCTX.fillStyle = "rgba("+255+","+255+","+255+","+(255/255)+")";
     // rdCTX.fillRect( 0, 0, 1, 1 );
     // rdCTX.fillRect( 1, 0, 1, 1 );
     // rdCTX.fillRect( 2, 0, 1, 1 );
