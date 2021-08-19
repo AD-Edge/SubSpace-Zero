@@ -62,7 +62,7 @@ var blockTest = null;
 const sparkImg = new Image(); 
 sparkImg.src = 'res/sprk.png';
 const grndImg1 = new Image();   //9x18
-grndImg1.src = 'res/gnd1.png';
+grndImg1.src = 'res/gnd1_v2.png';
 const grndImg2 = new Image(); 
 grndImg2.src = 'res/gnd2.png';
 const grndImg2HL = new Image(); 
@@ -200,12 +200,6 @@ function BuildIsoGrid() {
             //CreateIsoElement(i*gDimX, j*gDimY);
             //console.log('Created iso tile at [' + pos[0] + ', ' + pos[1] +']');
         }
-        //toggle offset
-        if(offS == 0) {
-            offS = 0.5;
-        } else if (offS == 0.5) {
-            offS = 0;
-        }
     }
 }
 
@@ -227,11 +221,11 @@ function ConvertISOToScreenPos(area, xL, yL) {
 function ConvertScreenToISOPos(area, GlX, GlY) {
 
     //calculate x
-    var xISO = ((GlY / area.y) / isoY + (GlX - area.x) / isoX) / 2;
+    var xLoc = ((GlY - area.y) / isoY + (GlX - area.x) / isoX) / 2;
     //calculate y
-    var yISO = ((GlY / area.y) / isoY - (GlX - area.x) / isoX) / 2;
+    var yLoc = ((GlY - area.y) / isoY - (GlX - area.x) / isoX) / 2;
     
-    return [xISO, yISO];
+    return [xLoc, yLoc];
 
 }
 
@@ -242,27 +236,27 @@ function CreateIsoElement(xIn, yIn) {
         width:0,
         image:grndImg1,
 
-        onDown() {
-            this.image = grndImg2;
-        },
-        onUp() {
-            if(this.width == 0) {
-                this.width = 1;
-            } else {
-                this.width = 0;
-            }
-            this.image = grndImg2HL;
-        },
-        onOver() {
-            if(this.width == 0) {
-                this.image = grndImg2;
-            }
-        },
-        onOut: function() {
-            if(this.width == 0) {
-                this.image = grndImg1;
-            }
-        }
+        // onDown() {
+        //     this.image = grndImg2;
+        // },
+        // onUp() {
+        //     if(this.width == 0) {
+        //         this.width = 1;
+        //     } else {
+        //         this.width = 0;
+        //     }
+        //     this.image = grndImg2HL;
+        // },
+        // onOver() {
+        //     if(this.width == 0) {
+        //         this.image = grndImg2;
+        //     }
+        // },
+        // onOut: function() {
+        //     if(this.width == 0) {
+        //         this.image = grndImg1;
+        //     }
+        // }
     });
 
     track(isoSQR);
@@ -365,20 +359,40 @@ canvas.addEventListener('mousemove', event =>
 {
     let bound = canvas.getBoundingClientRect();
 
+            //event.clientX : horizontal coord (according to the client area) - ie within the viewport where the event occured (in this case a canvas)
+            //bound.left : upper left corner offset to the left of the offsetParent node 
+            // canvas.clientLeft : width of the left border of pixels 
+            //basically should be pos relative to 0,0 of the canvas (top left)
     let xM = event.clientX - bound.left - canvas.clientLeft;
     let yM = event.clientY - bound.top - canvas.clientTop;
 
-    //context.fillRect(xM, yM, 16, 16);
+    //console.count(xM + ", " + yM);
+    let pos = ConvertScreenToISOPos(isoArea, xM, yM);
+    var xtest = Math.floor(pos[0] );
+    var ytest = Math.floor(pos[1] );
+
+    console.log('Grid location: ' + xtest + ', ' + ytest);
     
-    //let pos = ConvertISOToScreenPos(screenArea, xM, yM);
+    // let pos2 = ConvertISOToScreenPos(isoArea, pos[0], pos[1]);
+    // console.log('Grid location: ' + pos2[0] + ', ' + pos2[1]);
 
-    var xTest = parseInt(xM/(isoX/16));
-    var yTest = parseInt(yM/(isoY/9));
+    // var imgData = context.getImageData(xM, yM, 1, 1).data; 
+    // console.log('Colour: ' + data[0] + ', ' + data[1] + ', ' + data[2]);
 
-    isoSpt.x = xM;
-    isoSpt.y = yM;
+    let cursPos = ConvertISOToScreenPos(isoArea, xtest, ytest);
 
-    console.log(xTest + ", " + yTest);
+    if(cursPos[0] >= 0) {
+        isoSpt.x = cursPos[0];
+    } else {
+        isoSpt.x = 0;
+    }
+    
+    if(cursPos[1] >= 0) {
+        isoSpt.y = cursPos[1];
+    } else {
+        isoSpt.y = 0;
+    }
+    //console.log(xTest + ", " + yTest);
 });
 
 function GameUpdate() {
@@ -401,6 +415,8 @@ function GameUpdate() {
 
 }
 
+//var num = 0;
+
 /////////////////////////////////////////////////////
 //PRIMARY GAME LOOP
 ////////////////////////////////////////////////////
@@ -410,9 +426,27 @@ const loop = GameLoop({
         if(gameState == 0) { //Start
             if(stateInit == false) {
                 InitGameState();
+
             }
+
+            //highlight through all cell grids 
+            // if(num < isoCells.length-1) {
+            //     num += 1;
+            //     isoCells[num].image = grndImg2;
+            //     if(num == 0) {
+            //         //isoCells[isoCells.length-1].image = grndImg1;
+            //     } else {
+            //         isoCells[num-1].image = grndImg1;
+            //     }
+
+            // } else {
+            //     isoCells[isoCells.length-1].image = grndImg1;
+            //     num = 0;
+            // }
+
             GameUpdate();
             RunTestChunk();
+
         }else if (gameState == 1) { //Tutorial
         }else if (gameState == 2) {
         }else if (gameState == 3) {
@@ -435,9 +469,11 @@ const loop = GameLoop({
             plSpark.render();
         }
 
-        sideUIL.render();
-        sideUIR.render();
-        sideUIB.render();
+        // sideUIL.render();
+        // sideUIR.render();
+        // sideUIB.render();
+
+        //screenArea.render();
 
     }
 });
