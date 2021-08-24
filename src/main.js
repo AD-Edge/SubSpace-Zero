@@ -30,13 +30,16 @@ var plSpt_tog = true; //false = player
 var plSpark = null;
 var mvX=0;
 var mvY=0;
-var psX=200;
-var psY=200;
+var psX=236;
+var psY=199;
 
 var isoSpt = null;
 var spX = 299;
 var spY = 187;
 
+//Array for blocks
+var blocks = [];
+var blocksB = [];
 
 //Isometric stuff 
 var isoCells = [];
@@ -50,6 +53,7 @@ var isoX = 16; //18
 var isoY = 9; //9 
 
 let isoArea = null;
+let isoHLT = null;
 let screenArea = null;
 let sideUIL = null;
 let sideUIR = null;
@@ -61,8 +65,10 @@ var blockTest = null;
 //Images and sprites
 const sparkImg = new Image(); 
 sparkImg.src = 'res/sprk.png';
+const mechImg = new Image(); 
+mechImg.src = 'res/mech_sprite4.png';
 const grndImg1 = new Image();   //9x18
-grndImg1.src = 'res/gnd1_v2.png';
+grndImg1.src = 'res/gnd1.png';
 const grndImg2 = new Image(); 
 grndImg2.src = 'res/gnd2.png';
 const grndImg2HL = new Image(); 
@@ -81,14 +87,14 @@ function InitGameState() {
     plSpark = Sprite({ 
         x:psX,
         y:psY,
-        image:sparkImg,
+        image:mechImg,
         dx: mvX,
         dy: mvY,
     });
     //init debug locator
     isoSpt = Sprite({ 
-        x:spX,
-        y:spY,
+        x:0,
+        y:0,
         width:4,
         height:4,
         color: 'white',
@@ -96,6 +102,13 @@ function InitGameState() {
         update() {
 
         }
+    });
+
+    //cursor location    
+    isoHLT = Sprite({
+        x:0,
+        y:0,
+        image:grndImg2,
     });
 
     sideUIR = Sprite({
@@ -149,10 +162,37 @@ function InitGameState() {
     pos = ConvertISOToScreenPos(isoArea, 7, 7);
     GenerateBuildings(pos[0], pos[1]);
 
+    //generate falling stars
+    for (let i=0; i < 8; i++) {
+        createFallBlock(blocks, 4, 2);
+        //0.05 for subspace, 2 for normal space ? 
+    }
+    //generate falling stars below
+    for (let i=0; i < 10; i++) {
+        createFallBlock(blocksB, 2, 0.2);
+    }
+
     stateInit = true;
     
 }
+//Create falling particles
+function createFallBlock(array, d, s) {
 
+    let rY = Math.random() * 1 + s; 
+
+    const block = Sprite({
+        type: 'block',
+        x: Math.floor(Math.random() * (-canvas.width - canvas.width)) + canvas.width,
+        y: Math.floor(Math.random()* canvas.width) + 1,
+        color: 'white',
+        width: d,
+        height: d,
+        dy: rY/1.75,
+        dx: rY,
+    });
+    array.push(block);
+    //console.log(block); 
+}
 function GenerateBuildings(bX, bY) {
     blockTest = Sprite({ 
         x:bX,
@@ -166,7 +206,6 @@ function GenerateBuildings(bX, bY) {
     isoArea.addChild(blockTest);
 
 }
-
 function BuildIsoGrid() {
     screenArea = Sprite({ 
         x:0,
@@ -186,7 +225,7 @@ function BuildIsoGrid() {
 
     });
     let offS = 0;
-    
+
     //init iso grid
     for (let i=0; i<gridY; i++) {
         for (let j=0; j<gridX; j++) {
@@ -202,7 +241,6 @@ function BuildIsoGrid() {
         }
     }
 }
-
 //Takes in Area for location 0,0 & local isometric point
 //Finds GLOBAL (screen) location of points xC/yC
 function ConvertISOToScreenPos(area, xL, yL) {
@@ -215,7 +253,6 @@ function ConvertISOToScreenPos(area, xL, yL) {
     return [xGlb, yGlb];
 
 }
-
 //Takes in area for location 0,0 and global point
 //Finds LOCAL (isometric) location of point
 function ConvertScreenToISOPos(area, GlX, GlY) {
@@ -228,7 +265,6 @@ function ConvertScreenToISOPos(area, GlX, GlY) {
     return [xLoc, yLoc];
 
 }
-
 function CreateIsoElement(xIn, yIn) {
     const isoSQR = Sprite({
         x:xIn,
@@ -236,34 +272,12 @@ function CreateIsoElement(xIn, yIn) {
         width:0,
         image:grndImg1,
 
-        // onDown() {
-        //     this.image = grndImg2;
-        // },
-        // onUp() {
-        //     if(this.width == 0) {
-        //         this.width = 1;
-        //     } else {
-        //         this.width = 0;
-        //     }
-        //     this.image = grndImg2HL;
-        // },
-        // onOver() {
-        //     if(this.width == 0) {
-        //         this.image = grndImg2;
-        //     }
-        // },
-        // onOut: function() {
-        //     if(this.width == 0) {
-        //         this.image = grndImg1;
-        //     }
-        // }
     });
 
     track(isoSQR);
     isoCells.push(isoSQR);
     isoArea.addChild(isoSQR);
 }
-
 let ix = 0;
 let jy = 0;
 let timer = 0;
@@ -271,14 +285,12 @@ let rdCTX = renderIMG.getContext('2d');
 
 function RunTestChunk() {
 
-
     //if init, generate roads
     //min-max of roads connecting to other chunks? experiment with values
 
     //generate locations of building blocks along side roads
 
     //generate sub blocks, along side building, locate away from roads
-
 
     if(timer <= 0) {
         if(ix < chkX) {
@@ -296,7 +308,6 @@ function RunTestChunk() {
         timer -= 0.1;
     }
 }
-
 function InitCreateChunk() {
     //create image
     renderIMG.width = 32;
@@ -323,14 +334,12 @@ function InitCreateChunk() {
     //     console.log("pixel data out: " + data[i]);
     // }
 
-
     for(let i=0; i < chkX; i++) {
         for(let j=0; j < chkX; j++) {
             //console.log("pixel data out: " + data[i]);
         }    
 
     }
-
 
     //generate pixel data
 
@@ -339,7 +348,6 @@ function InitCreateChunk() {
     //need some kind of 2nd array for game objects, render both at once for ordering?
 
 }
-
 //lets you export the image to a renderIMG & save
 function AddImageSaver() {
     renderIMG.width = 256;
@@ -353,12 +361,10 @@ function AddImageSaver() {
     });
 
 }
-
 //Handle mouse movement
 canvas.addEventListener('mousemove', event =>
 {
     let bound = canvas.getBoundingClientRect();
-
             //event.clientX : horizontal coord (according to the client area) - ie within the viewport where the event occured (in this case a canvas)
             //bound.left : upper left corner offset to the left of the offsetParent node 
             // canvas.clientLeft : width of the left border of pixels 
@@ -368,33 +374,30 @@ canvas.addEventListener('mousemove', event =>
 
     //console.count(xM + ", " + yM);
     let pos = ConvertScreenToISOPos(isoArea, xM, yM);
-    var xtest = Math.floor(pos[0] );
-    var ytest = Math.floor(pos[1] );
+    var xtest = Math.ceil(pos[0]- 0.5);
+    var ytest = Math.round(pos[1]);
 
-    console.log('Grid location: ' + xtest + ', ' + ytest);
-    
-    // let pos2 = ConvertISOToScreenPos(isoArea, pos[0], pos[1]);
-    // console.log('Grid location: ' + pos2[0] + ', ' + pos2[1]);
+    //console.log('Grid location: ' + xtest + ', ' + ytest);
 
-    // var imgData = context.getImageData(xM, yM, 1, 1).data; 
-    // console.log('Colour: ' + data[0] + ', ' + data[1] + ', ' + data[2]);
-
-    let cursPos = ConvertISOToScreenPos(isoArea, xtest, ytest);
-
-    if(cursPos[0] >= 0) {
-        isoSpt.x = cursPos[0];
-    } else {
-        isoSpt.x = 0;
+    if(xtest <= 6) {
+        xtest = 6;
+    } else if (xtest >= 21) {
+        xtest = 21;
     }
-    
-    if(cursPos[1] >= 0) {
-        isoSpt.y = cursPos[1];
-    } else {
-        isoSpt.y = 0;
+    if(ytest <= -4) {
+        ytest = -4;
+    } else if (ytest >= 11) {
+        ytest = 11;
     }
-    //console.log(xTest + ", " + yTest);
+
+    let cursPos = ConvertISOToScreenPos(isoArea, xtest, ytest-0.25);
+
+    isoHLT.x = cursPos[0]-14;
+    isoHLT.y = cursPos[1]-6;
+    isoSpt.x = cursPos[0];
+    isoSpt.y = cursPos[1];
+
 });
-
 function GameUpdate() {
 
     if(isoSpt) {
@@ -402,20 +405,32 @@ function GameUpdate() {
 
     }
 
-
-    if(plSpark) {
-        plSpark.update();
-
-        var num = Math.floor(Math.random() * 3) - 1;
-        plSpark.x += num/10;
-        num = Math.floor(Math.random() * 3) - 1;
-        plSpark.y += num/10;
-        //console.log('position debug: [' + plSpark.x + ', ' + plSpark.y + ']');
-    }
-
+    //Star Blocks
+    blocks.map(block => {
+        block.update();
+        if(block.y > canvas.height || block.x > canvas.width) {
+            block.y = -block.height;
+            block.x = Math.floor(Math.random() * (-canvas.width - canvas.width)) + canvas.width;
+            //console.log("new coords: " + block.x + ", " + block.y);
+        }
+    });
+    blocksB.map(block => {
+        block.update();
+        if(block.y > canvas.height || block.x > canvas.width) {
+            block.y = -block.height/2;
+            block.x = Math.floor(Math.random() * (-canvas.width - canvas.width)) + canvas.width;
+        }
+    });
+    //shake
+    // if(plSpark) {
+    //     plSpark.update();
+    //     var num = Math.floor(Math.random() * 3) - 1;
+    //     plSpark.x += num/10;
+    //     num = Math.floor(Math.random() * 3) - 1;
+    //     plSpark.y += num/10;
+    //     //console.log('position debug: [' + plSpark.x + ', ' + plSpark.y + ']');
+    // }
 }
-
-//var num = 0;
 
 /////////////////////////////////////////////////////
 //PRIMARY GAME LOOP
@@ -452,13 +467,14 @@ const loop = GameLoop({
         }else if (gameState == 3) {
         }
         
-
     },
     render: () => {
+        blocksB.map(block => block.render());
 
         if(isoSpt) {
             isoSpt.render();
         }
+        isoHLT.render();
 
         if(isoArea) {
             isoArea.render();
@@ -468,6 +484,8 @@ const loop = GameLoop({
         if(plSpark) {
             plSpark.render();
         }
+
+        blocks.map(block => block.render());
 
         // sideUIL.render();
         // sideUIR.render();
@@ -489,8 +507,8 @@ loop.start();
 ////////////////////////////////////////////////////
 bindKeys(['left', 'a'], function(e) {
     if(plSpt_tog) {
-        spX -= isoX;
-        isoSpt.x = spX;
+        //spX -= isoX;
+        //isoSpt.x = spX;
     } else {
         mvX -= 0.1;
         plSpark.dx = mvX;
@@ -499,8 +517,8 @@ bindKeys(['left', 'a'], function(e) {
 
 bindKeys(['right', 'd'], function(e) {
     if(plSpt_tog) {
-        spX += isoX;
-        isoSpt.x = spX;
+        //spX += isoX;
+        //isoSpt.x = spX;
     } else {
         mvX += 0.1;
         plSpark.dx = mvX;
@@ -509,8 +527,8 @@ bindKeys(['right', 'd'], function(e) {
 
 bindKeys(['up', 'w'], function(e) {
     if(plSpt_tog) {
-        spY -= isoY*2;
-        isoSpt.y = spY;
+        //spY -= isoY*2;
+        //isoSpt.y = spY;
     } else {
         mvY -= 0.1;
         plSpark.dy = mvY;
@@ -519,8 +537,8 @@ bindKeys(['up', 'w'], function(e) {
 
 bindKeys(['down', 's'], function(e) {
     if(plSpt_tog) {
-        spY += isoY*2;
-        isoSpt.y = spY;
+        //spY += isoY*2;
+        //isoSpt.y = spY;
     } else {
         mvY += 0.1;
         plSpark.dy = mvY;
