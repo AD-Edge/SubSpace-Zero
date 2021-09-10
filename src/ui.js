@@ -62,28 +62,43 @@ function ProcessLetterImages() {
 }
 
 
-function GenerateString(str, ar, sz) {
+function GenerateString(str, x, y, obj, sz, rnd, rnd2) {
     var s = 0; //spacing
-
+    var n = 0;
+    var ar;
+    if(sz == sm) { // set string lib 
+        ar = smLT;
+    } else if (sz == md) {
+        ar = mdLT;
+    } else if (sz == lg) {
+        ar = lgLT;
+    }
     //get string
     for(var i=0; i<str.length;i++) {
-        var n = str.charCodeAt(i) - 97;
-
+        n = str.charCodeAt(i) - 97;
+        
         if(ar[n]) { //check letter exists
             //console.log("Letter " + str[i] + " pos in alphabet: " + n);
             
             s += ar[n].width + 6;
-            console.log("Rendering " + str[i] 
-                + " width is " + ar[n].width + " position: " + s);
-    
-            CreateLetter(ar[n], s, 0);
+            //console.log("Rendering " + str[i] 
+            //    + " width is " + ar[n].width + " position: " + s);
+
+            if((i == rnd) || (i == rnd2)) {
+                CreateLetter(ar[Math.floor(Rand(0, ar.length))], obj, s + x, y);
+            } else {
+                CreateLetter(ar[n], obj, s + x, y);
+            }
         }
         else {
+        
+            //console.log(Number.isInteger(n));
+            console.log("letter not found "+ str[i] + " charCodeAt: " + n);
             s += sz*4;//blank or unknown
         }
     }
 }
-function CreateLetter(lt, xIn, yIn) {
+function CreateLetter(lt, obj, xIn, yIn) {
     
     const ASpt = Sprite({
         x: xIn,
@@ -93,30 +108,59 @@ function CreateLetter(lt, xIn, yIn) {
         image: lt,
     });
 
-    titleObj.addChild(ASpt);
+    obj.addChild(ASpt);
 }
 
 //Build anything that has to wait for pixel objects to generate
-function InitTitleObject() {
-        
+//rnd is a random position for a glitch, -1 for none
+function InitTitleObject(rnd, rnd2) {
     //test string hosting object
-    titleObj = Sprite({
+    titleObj = GameObject({
         x: 90,
         y: 90,
-        width: 400,
-        height: 32,
-        //image: imageArray[0],
-
-        render: function() {
-            // this.draw();
-            // this.context.strokeStyle = 'red';
-            // this.context.lineWidth = 1;
-            // this.context.strokeRect(0, 0, this.width, this.height);
-        }
     });
 
     //img2.src = URL.createObjectURL(blobArr[28]);
-    GenerateString("subspace zero", lgLT, lg);
+    GenerateString("subspace zero", 0, 0, titleObj, lg, rnd, rnd2);
     //GenerateString("abcdefghijklmnopqrstuvwxyz", mdLT, md);
-    //GenerateString("alex delderfield", mdLT, md);
+
+}
+
+function InitPlayButton() {
+    //test string hosting object
+    startObj = Button({
+        x: 250,
+        y: 180,
+        width: 95,
+        height: 32,
+        color: '#555555',
+
+        onDown() {
+            this.color = '#2C7DC3';
+        },
+        onUp() {
+            this.color = '#555555';
+        },
+        onOver() {
+            this.color = '#CCCCCC'
+        },
+        onOut: function() {
+            this.color = '#555555'
+        }
+    });
+
+    GenerateString("start", -12, 5, startObj, md, -1, -1);
+
+}
+
+function InitTxtObj(str, x, y, fs) {
+    obj = GameObject({
+        x: x,
+        y: y,
+    });
+
+    //img2.src = URL.createObjectURL(blobArr[28]);
+    GenerateString(str, 0, 0, obj, fs, -1, -1);
+
+    addToRenderQueueUI(obj);
 }

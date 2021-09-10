@@ -74,7 +74,6 @@ function DrawBinaryToCavas(ctx, size, rows) {
 function ConvertCanvastoImageData(cnv) {
     let cntxt = cnv.getContext("2d");
     imageData = cntxt.getImageData(0, 0, cnv.width, cnv.height);
-    //console.log(imageData);
     
     // Convert canvas to Blob, then Blob to ArrayBuffer.
     cnv.toBlob((blob) => {
@@ -93,9 +92,6 @@ function ConvertCanvastoImageData(cnv) {
 
                 //find out when processing is done
                 if(blobArr.length == tl.length) {
-                    //console.log("Letters actually generated: " + imageArray.length);
-                    //console.log("Blobs generated: " + blobArr.length);
-                    
                     ProcessLetterImages();
                 }
         });

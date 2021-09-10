@@ -27,3 +27,8 @@ function hexToBinary(hex) {
 function Lerp() {
 
 }
+
+//Random gen
+function Rand(min, max) {
+    return Math.random() * (max - min) + min;
+}
