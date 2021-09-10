@@ -1,17 +1,13 @@
 //Decoder functions, for decoding compressed pixel art image data
-var imageArray = [];
 var blobArr = [];
 
 const mimeType = 'image/png';
 
 //Decompiles sprite data (HEX compress)
-function DecompileDrawSprite(data, x, y, size, cvs) {
+function DecompileDrawSprite(data, size, cvs) {
     //console.log("Decompiling: " + data);
     var splitData = data.split(",");
 
-    //1 bit for now
-    context.fillStyle = 'black';
-    
     //get dimensions 
     w = splitData[0];
     h = splitData[1];
@@ -49,8 +45,8 @@ function DecompileDrawSprite(data, x, y, size, cvs) {
 //draws decompiled sprite to canvas
 //to be saved as image
 function DrawBinaryToCavas(ctx, size, rows) {
-    //build sprite from binary (~format of previous stuff)
-    context.fillStyle = 'black';
+    ctx.fillStyle = 'white';
+
     var currX = 0;
     //loop through all pixel row strings
     //needed = [1,0,1][1,1,1]... (previous setup)
@@ -100,8 +96,7 @@ function ConvertCanvastoImageData(cnv) {
                     //console.log("Letters actually generated: " + imageArray.length);
                     //console.log("Blobs generated: " + blobArr.length);
                     
-                    ProcessTestLetterImages();
-                    //initProcessing = true;
+                    ProcessLetterImages();
                 }
         });
         reader.readAsArrayBuffer(blob);

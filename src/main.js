@@ -22,6 +22,10 @@ kontra.initKeys();
 //3 = Death 
 var gameState = 0;
 var stateInit = false;
+var preSetup = false;
+var initProcessing = false;
+
+var titleObj = null;
 
 var cmpIMG = document.getElementById('compileIMG');
 
@@ -29,10 +33,9 @@ var cmpIMG = document.getElementById('compileIMG');
 //GAME FUNCTIONS
 /////////////////////////////////////////////////////
 
-
 //Run on game start
 function InitGameState() {
-
+    InitTitleObject();
 
 }
 
@@ -41,12 +44,21 @@ function InitGameState() {
 /////////////////////////////////////////////////////
 const loop = GameLoop({
     update: () => {
-        if(gameState == 0) { //Start-Menu
-            if(stateInit == false) {
+        if(gameState == 0) { //Start/Menu
+
+            //kickoff first
+            if(!initProcessing && !preSetup) {
+                InitPreUI();
+                preSetup = true;
+                //calls all process functions for graphics
+            }
+            //kicked off second, once images are generated
+            if(!stateInit && initProcessing) {
                 InitUI();
                 InitGameState();
                 stateInit = true;
             }
+
         }else if (gameState == 1) { //Setup
         }else if (gameState == 2) { //Game
         }else if (gameState == 3) { //Death
@@ -54,6 +66,9 @@ const loop = GameLoop({
     },
     render: () => {
 
+        if(titleObj) {
+            titleObj.render();
+        }
     }
 });
 
