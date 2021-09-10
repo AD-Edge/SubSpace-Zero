@@ -28,6 +28,8 @@ var initProcessing = false;
 var load = null;
 var titleObj = null;
 var startObj = null;
+var sceneChange = -1;
+var timer = 0;
 
 var cmpIMG = document.getElementById('compileIMG');
 
@@ -81,7 +83,7 @@ function TitleGlitch() {
                 ClearTitle();
             }
         } else {
-            tmX -= 0.1;
+            tmX -= 0.05;
         }
 
         if(tgZ) {if((Math.floor(tmZ))==1 || (Math.floor(tmZ))==3 || (Math.floor(tmZ))==5){
@@ -119,13 +121,33 @@ function Loading() {
     });
 
 }
+
+function sceneSwitch() {
+    if(sceneChange == 0) { //PLAY GAME
+        gameState = 0; 
+        stateInit = true; //reset start menu
+    } else if (sceneChange == 1) { 
+        gameState = 1; 
+    } else if (sceneChange == 2) { 
+        gameState = 2;
+    } else if (sceneChange == 3) { 
+        gameState = 3;
+    } else if (sceneChange == 4) {   
+        gameState = 0; //quit 
+    }        
+    //reset trigger
+    sceneChange = -1;
+}
+
 //Run on game start
 function InitGameState() {
     console.log('Init Game State');
     
     InitTitleObject(-1, -1);
     InitPlayButton();
-    InitTxtObj("by alex delderfield for js13k", 136, 300, sm);
+    InitTxtObj("13", 414, 300, sm);
+    InitTxtObj("by alex delderfield for js  k", 196, 300, sm);
+    //InitTxtObj("numbers   0123456789", 136, 250, sm);
 
     //generate falling stars
     for (let i=0; i < 8; i++) {
@@ -144,6 +166,15 @@ function InitGameState() {
 /////////////////////////////////////////////////////
 const loop = GameLoop({
     update: () => {
+        if(sceneChange != -1) {
+            if(timer > 0) {
+                timer -= 0.1;
+            } else {
+                console.log("changing state");
+                sceneSwitch();
+            }
+        }
+
         if(gameState == 0) { //Start/Menu
 
             //kickoff first
@@ -166,7 +197,7 @@ const loop = GameLoop({
             }
             //ongoing menu processes
             if(stateInit) {
-                //TitleGlitch();
+                TitleGlitch();
             }
 
         //Star Blocks
@@ -187,6 +218,7 @@ const loop = GameLoop({
         });
 
         }else if (gameState == 1) { //Setup
+            console.log("setup state");
         }else if (gameState == 2) { //Game
         }else if (gameState == 3) { //Death
         }
@@ -215,6 +247,7 @@ const loop = GameLoop({
             blocks.map(block => block.render());
 
         }else if (gameState == 1) { //Setup
+
         }else if (gameState == 2) { //Game
         }else if (gameState == 3) { //Death
         }

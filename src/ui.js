@@ -120,21 +120,31 @@ function GenerateString(str, x, y, obj, sz, rnd, rnd2) {
         if(ar[n]) { //check letter exists
             //console.log("Letter " + str[i] + " pos in alphabet: " + n);
             
-            s += ar[n].width + 6;
+            s += ar[n].width + sz;
             //console.log("Rendering " + str[i] 
             //    + " width is " + ar[n].width + " position: " + s);
-
+            
             if((i == rnd) || (i == rnd2)) {
                 CreateLetter(ar[Math.floor(Rand(0, ar.length))], obj, s + x, y);
             } else {
                 CreateLetter(ar[n], obj, s + x, y);
             }
-        }
-        else {
+        } else {  
+            var t = parseInt(str[i]);
+            if(Number.isInteger(t)) {
+                //console.log("its a number: " + t);
+                //console.log("adding space: " + ar[t+26].width + sz*4);
+                CreateLetter(ar[t+26], obj, s + x, y);
+                s += ar[t+26].width + sz;
+            } else {
+                if(str[i] == '') {
+                    s += sz*4;//blank or unknown
+                } else {
+                    s += sz*4;//blank or unknown
+                    //console.log("symbol not found "+ str[i] + " charCodeAt: " + n);
+                }
         
-            //console.log(Number.isInteger(n));
-            console.log("letter not found "+ str[i] + " charCodeAt: " + n);
-            s += sz*4;//blank or unknown
+            }
         }
     }
 }
@@ -169,7 +179,7 @@ function InitTitleObject(rnd, rnd2) {
 function InitPlayButton() {
     //test string hosting object
     startObj = Button({
-        x: 260, //250
+        x: 270, //250
         y: 180,
         width: 95,
         height: 32,
@@ -177,6 +187,8 @@ function InitPlayButton() {
 
         onDown() {
             this.color = '#2C7DC3';
+            timer = 0.25;
+            sceneChange = 1;
         },
         onUp() {
             this.color = '#555555';
@@ -190,7 +202,7 @@ function InitPlayButton() {
     });
 
     //GenerateString("abcdefghijklmnopqrstuvwxyz", -12, 5, startObj, md, -1, -1);
-    GenerateString("start", -12, 5, startObj, md, -1, -1);
+    GenerateString("start", -6, 5, startObj, md, -1, -1);
 
 }
 
