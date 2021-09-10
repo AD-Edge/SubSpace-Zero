@@ -23,12 +23,16 @@ kontra.initKeys();
 var gameState = 0;
 var stateInit = false;
 
+var cmpIMG = document.getElementById('compileIMG');
+
 /////////////////////////////////////////////////////
 //GAME FUNCTIONS
 /////////////////////////////////////////////////////
 
+
 //Run on game start
 function InitGameState() {
+
 
 }
 
@@ -39,7 +43,9 @@ const loop = GameLoop({
     update: () => {
         if(gameState == 0) { //Start-Menu
             if(stateInit == false) {
+                InitUI();
                 InitGameState();
+                stateInit = true;
             }
         }else if (gameState == 1) { //Setup
         }else if (gameState == 2) { //Game
