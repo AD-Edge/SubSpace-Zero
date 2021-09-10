@@ -71,7 +71,7 @@ function DrawBinaryToCavas(ctx, size, rows) {
 }
 
 //First step in converting renderImage canvas to image data/compressed
-function ConvertCanvastoImageData(cnv) {
+function ConvertCanvastoImageData(cnv, num) {
     let cntxt = cnv.getContext("2d");
     imageData = cntxt.getImageData(0, 0, cnv.width, cnv.height);
     
@@ -83,16 +83,15 @@ function ConvertCanvastoImageData(cnv) {
             //Set array buffer
             const arrayBuffer = reader.result;
             
-                //set data for usage external to this function
-                var img = new Image();
-
-                //Blob content -> Image & URL
+            //console.log("new blob: " + num);
+            
+            //Blob content -> Image & URL
                 const blob = new Blob([arrayBuffer], {type: mimeType});        
-                blobArr.push(blob);
+                blobArr[num] = blob;
 
                 //find out when processing is done
                 if(blobArr.length == tl.length) {
-                    ProcessLetterImages();
+                    isProc = true;
                 }
         });
         reader.readAsArrayBuffer(blob);

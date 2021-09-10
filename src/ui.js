@@ -7,32 +7,87 @@ var sm = 2;
 var md = 4;
 var lg = 8;
 
+var isProc = false; //is processed?
+var inc = 0; //incrementor
+
+var preTm = 2;
+
+console.log("//Need to load " + tl.length + " sprites//");
+
 //Setup all generated letters and images
 function InitPreUI() {
-    ProcessLetters();
-
+    for(var i=0; i< tl.length; i++) {
+        //decompile
+        DecompileDrawSprite(tl[i], 5, cmpIMG);
+        ConvertCanvastoImageData(cmpIMG, i); 
+        
+    }
     //ProcessGraphics();
 }
 
 //Setup UI elements
 function InitUI() {
+
 }
 
 //Process Letters and Numbers 
 function ProcessLetters() {
-    console.log("//Need to load " + tl.length + " sprites//");
-    for(var i=0; i< tl.length; i++) {
-        //decompile
-        DecompileDrawSprite(tl[i], 5, cmpIMG);
-        ConvertCanvastoImageData(cmpIMG, false); 
+    
+    if(isProc) {
+        if(preTm > 0) { //give things time to load
+            preTm -= 0.1;
+        } else {
+            if(lgLT.length == 0) {
+                //kick off
+                try {
+                    PopulateImageArray(lg);
+                }catch(err) {
+                    lgLT.length = 0;
+                    lgLT = [];
+                    console.log("it broke, trying again: " + err);
+                    return;
+                }
+            } else if(lgLT.length == tl.length) {
+                if(mdLT.length == 0) {
+                    try {
+                        PopulateImageArray(md);
+                    }catch(err) {
+                        mdLT.length = 0;
+                        mdLt = [];
+                        console.log("it broke, trying again: " + err);
+                        return; 
+                    }
+                } else if (mdLT.length == tl.length) {
+                    if(smLT.length == 0) {
+                        try {
+                            PopulateImageArray(sm);
+                        }catch(err) {
+                            smLT.length = 0;
+                            smLT = [];
+                            console.log("it broke, trying again: " + err);
+                            return;
+                        }
+                    } else if (smLT.length == tl.length) {
+                        console.log("images in sm arr: " + smLT.length);
+                        console.log("images in md arr: " + mdLT.length);
+                        console.log("images in lg arr: " + lgLT.length);
+                    
+                        initProcessing = true;
+                        console.log("Images generated: " + (smLT.length + mdLT.length + lgLT.length));
+                    }
+                }
+            }
+        }
     }
 }
 
+//make arrays for various letter images
 function PopulateImageArray(sz) {
     for(var i=0; i< blobArr.length; i++) {
         const newImg = new Image();
+
+        //kicking up issues
         newImg.src = URL.createObjectURL(blobArr[i]);
-    
         //set image size 
         newImg.width = tl[i].charAt(0) * sz;
         newImg.height = tl[i].charAt(2) * sz;
@@ -46,21 +101,6 @@ function PopulateImageArray(sz) {
         }
     }
 }
-
-function ProcessLetterImages() {
-
-    PopulateImageArray(sm);
-    PopulateImageArray(md);
-    PopulateImageArray(lg);
-    
-    console.log("images in sm arr: " + smLT.length);
-    console.log("images in md arr: " + mdLT.length);
-    console.log("images in lg arr: " + lgLT.length);
-
-    initProcessing = true;
-    console.log("Images generated: " + (smLT.length + mdLT.length + lgLT.length));
-}
-
 
 function GenerateString(str, x, y, obj, sz, rnd, rnd2) {
     var s = 0; //spacing
@@ -129,7 +169,7 @@ function InitTitleObject(rnd, rnd2) {
 function InitPlayButton() {
     //test string hosting object
     startObj = Button({
-        x: 250,
+        x: 260, //250
         y: 180,
         width: 95,
         height: 32,
@@ -149,6 +189,7 @@ function InitPlayButton() {
         }
     });
 
+    //GenerateString("abcdefghijklmnopqrstuvwxyz", -12, 5, startObj, md, -1, -1);
     GenerateString("start", -12, 5, startObj, md, -1, -1);
 
 }

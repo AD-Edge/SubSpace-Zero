@@ -25,6 +25,7 @@ var stateInit = false;
 var preSetup = false;
 var initProcessing = false;
 
+var load = null;
 var titleObj = null;
 var startObj = null;
 
@@ -108,13 +109,23 @@ function ClearTitle() {
 
 }
 
+function Loading() {
+    load = Text({
+        x: 6,
+        y:10,
+        text: 'Loading...',
+        color: '#FFFFFF',
+        font: '16px Verdana, bold, sans-serif'
+    });
+
+}
 //Run on game start
 function InitGameState() {
     console.log('Init Game State');
     
     InitTitleObject(-1, -1);
     InitPlayButton();
-    InitTxtObj("by alex delderfield for js13k", 130, 300, sm);
+    InitTxtObj("by alex delderfield for js13k", 136, 300, sm);
 
     //generate falling stars
     for (let i=0; i < 8; i++) {
@@ -137,19 +148,25 @@ const loop = GameLoop({
 
             //kickoff first
             if(!initProcessing && !preSetup) {
+                Loading();
                 InitPreUI();
                 preSetup = true;
                 //calls all process functions for graphics
             }
+            if(!initProcessing && preSetup) {
+                ProcessLetters();
+            }
             //kicked off second, once images are generated
             if(!stateInit && initProcessing) {
+                load = null;
+
                 InitUI();
                 InitGameState();
                 stateInit = true;
             }
             //ongoing menu processes
             if(stateInit) {
-                TitleGlitch();
+                //TitleGlitch();
             }
 
         //Star Blocks
@@ -176,6 +193,10 @@ const loop = GameLoop({
     },
     render: () => {
         if(gameState == 0) { //Start/Menu
+            if(load) {
+                load.render();
+            }
+
             blocksB.map(block => block.render());
 
             //render out each object in the render queue
@@ -189,6 +210,7 @@ const loop = GameLoop({
             if(startObj) {
                 startObj.render();
             }
+
 
             blocks.map(block => block.render());
 
