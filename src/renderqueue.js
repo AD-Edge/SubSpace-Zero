@@ -1,5 +1,4 @@
 //Render Queue functions for kontraJS render loop
-
 let rQ = {
     ui: [],
     bg: [],
@@ -15,4 +14,9 @@ function addRQBG(obj) {
 }
 function addRQSP(obj) {
     rQ.sp.push({obj});
+}
+
+function clearUI() {
+    rQ.ui.length = 0;
+    rQ.ui = [];
 }

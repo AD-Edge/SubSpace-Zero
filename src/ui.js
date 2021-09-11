@@ -1,31 +1,37 @@
 //User interface setup
-smLT = [];
-mdLT = [];
-lgLT = [];
-sm = 2;
-md = 4;
-lg = 8;
-
 isProc = false; //is processed?
 inc = 0; //incrementor
 
 preTm = 2; //preload timer
 
-console.log("//Need to load " + tl.length + " sprites//");
+//graphics 
+sm = 2;
+md = 4;
+lg = 8;
+//letter arrays
+smLT = []; 
+mdLT = [];
+lgLT = [];
+//sprite array
+//spRT = [];
+
+console.log("//Need to load " + tl.length*3 + " graphics sprites//");
 
 //Setup all generated letters and images
-function InitPreUI() {
+function InitPreLoad() {
     for(var i=0; i< tl.length; i++) {
         //decompile
         DecomSpr(tl[i], 5, cCVS);
         CvstoImData(cCVS, i); 
     }
-    //ProcessGraphics();
 }
 
-//Setup UI elements
-function InitUI() {
-
+function ProcessSprites() {
+    for(var i=0; i< px1.length; i++) {
+        //decompile
+        DecomSpr(px1[i], 5, cCVS);
+        CvstoImData(cCVS, i); 
+    }
 }
 
 //Process Letters and Numbers 
@@ -60,6 +66,7 @@ function ProcessLetters(){
                             return;
                         }
                     } else if (smLT.length == tl.length) {
+                        //ProcessSprites();
                         initProcessing = true;
                         console.log("Images generated: " + (smLT.length + mdLT.length + lgLT.length));
                     }
@@ -91,6 +98,7 @@ function GenImAr(sz) {
     }
 }
 
+//generate string or graphic
 function GenStr(str, x, y, obj, sz, rnd, rnd2) {
     var s = 0; //spacing
     var ar;
@@ -106,7 +114,7 @@ function GenStr(str, x, y, obj, sz, rnd, rnd2) {
             //console.log("Rendering " + str[i] 
             //    + " width is " + ar[n].width + " position: " + s);
             (i == rnd || i == rnd2) ?
-                CreateLetter(ar[Math.floor(Rand(0, ar.length))], obj, s + x, y):
+                CreateLetter(ar[Math.floor(Rand(0, 35))], obj, s + x, y):
                 CreateLetter(ar[n], obj, s + x, y) 
   
         } else {  
@@ -151,6 +159,7 @@ function InitTitle(rnd, rnd2) {
 function InitStart() {
     //test string hosting object
     startObj = Button({
+        type: '1',
         x: 270, //250
         y: 180,
         width: 95,
@@ -158,8 +167,7 @@ function InitStart() {
         color: '#555',
         onDown() {
             this.color = '#38C';
-            timer = 0.25;
-            sceneChange = 1;
+            ButPress(this.type);
         },
         onUp() {
             this.color = '#555';
@@ -176,12 +184,51 @@ function InitStart() {
 
 }
 
-function InitTxtObj(str, x, y, fs) {
+//MAKE text object
+function MKTxt(str, x, y, fs) {
     obj = GameObject({
         x: x,
         y: y,
     });
     //img2.src = URL.createObjectURL(blobArr[28]);
-    GenStr(str, 0, 0, obj, fs, -1, -1);
+    GenStr(str, 0, 0, obj, fs);
     addRQUI(obj);
+}
+
+//MAKE UI square
+function MKSqr(x, y, w, h, c) {
+    const sq = Sprite({
+        x: x,y: y,
+        color: c,
+        width: w,height: h,});
+    addRQUI(sq); 
+}
+
+//MAKE Button
+function MKBt(x, y, w, h, c, i, str) {
+    const bu = Button({
+        type: i,
+        x: x,y: y,
+        color: c,
+        width: w,height: h,
+        onDown() {
+            this.color = '#38C';
+            ButPress(this.type);
+        },
+        onUp() { this.color = c; },
+        onOver() { this.color = '#CCC'},
+        onOut: function() { this.color = c
+        }});
+    addRQUI(bu); 
+    if(str) {
+        GenStr(str, -6, 5, bu, md, -1, -1);
+    }
+}
+
+//all modular button functions
+function ButPress(i) {
+    i == 1 ? ( timer = 0.25, sceneChange = 1) 
+    : i == 2 ? ( timer = 0.25, sceneChange = 2)
+    : i == 69 ? ( timer = 0.25, sceneChange = 0)
+    : null
 }

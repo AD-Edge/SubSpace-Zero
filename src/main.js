@@ -44,18 +44,12 @@ var tZ = 0;
 var gX = false; 
 var gZ = false;
 
+//colour registers
+var cR = ["#FFF", "#000", "", "", "", "", ""]
+
 /////////////////////////////////////////////////////
 //GAME FUNCTIONS
 /////////////////////////////////////////////////////
-
-// var a = true;
-// a ? (console.log("true"), console.log("ahh")) : console.log("false");
-
-// var xx = 2.6;
-// x2 = Math.floor(xx);
-// x2 == 1 ? ClearTitle() 
-// :x2 == 3 ? ClearTitle()
-// :x2 == 5 ? ClearTitle(): null;
 
 
 //Create star particles
@@ -92,7 +86,6 @@ function TitleGlitch() {
         :(mZ = Rand(5,10), tZ=-1, CrT())
     ):(mZ -= 0.05);
 }
-
 function CrT() {
     titleObj = null;
     InitTitle(tX,tZ);
@@ -106,13 +99,13 @@ function Loading() {
         color: '#FFFFFF',
         font: '16px Verdana, bold, sans-serif'
     });
-
 }
 
-function sceneSwitch() {
+function SceneSwitch() {
+    stateInit = false;
+    
     if(sceneChange == 0) { //PLAY GAME
         gameState = 0; 
-        stateInit = true; //reset start menu
     } else if (sceneChange == 1) { 
         gameState = 1; 
     } else if (sceneChange == 2) { 
@@ -127,13 +120,13 @@ function sceneSwitch() {
 }
 
 //Run on game start
-function InitGameState() {
+function InitStartState() {
     console.log('Init Game State');
     
     InitTitle(-1, -1);
     InitStart();
-    InitTxtObj("13", 414, 300, sm);
-    InitTxtObj("by alex delderfield for js  k", 196, 300, sm);
+    MKTxt("13", 414, 300, sm);
+    MKTxt("by alex delderfield for js  k", 196, 300, sm);
     //InitTxtObj("numbers   0123456789", 136, 250, sm);
 
     //generate falling stars
@@ -145,7 +138,30 @@ function InitGameState() {
     for (let i=0; i < 10; i++) {
         CreateStarBlock(blocksB, 2, 0.2);
     }
+}
+
+//setup panel
+function InitSetupState() {
+    MKSqr(30, 30, canvas.width-60, canvas.height-60, '#444');
+    MKBt(500, 250, 95, 32, '#666', 2, "drop")
+    MKTxt("setup for subspace drop", 30, 40, sm);
+    MKTxt("connection active", 450, 40, sm);
     
+    MKTxt("set id", 28, 100, md);
+    MKTxt("xxx", 140, 100, md);
+    
+    MKTxt("set sector", 28, 140, md);
+    MKTxt("00", 230, 140, md);
+}
+
+function DrawGrid() {
+    console.log("grid");
+}
+
+//game zone
+function InitGameState() {
+    MKTxt("subspace sector  00", 0, 10, sm);
+    MKBt(10, 280, 32, 32, '#666', 69, "q")
 }
 
 /////////////////////////////////////////////////////
@@ -158,34 +174,11 @@ const loop = GameLoop({
                 timer -= 0.1;
             } else {
                 console.log("changing state");
-                sceneSwitch();
+                SceneSwitch();
+                //clear UI 
+                clearUI();
             }
         }
-
-        if(gameState == 0) { //Start/Menu
-
-            //kickoff first
-            if(!initProcessing && !preSetup) {
-                Loading();
-                InitPreUI();
-                preSetup = true;
-                //calls all process functions for graphics
-            }
-            if(!initProcessing && preSetup) {
-                ProcessLetters();
-            }
-            //kicked off second, once images are generated
-            if(!stateInit && initProcessing) {
-                load = null;
-
-                InitUI();
-                InitGameState();
-                stateInit = true;
-            }
-            //ongoing menu processes
-            if(stateInit) {
-                TitleGlitch();
-            }
 
         //Star Blocks
         blocks.map(block => {
@@ -204,9 +197,44 @@ const loop = GameLoop({
             }
         });
 
+        if(gameState == 0) { //Start/Menu
+            //kickoff first
+            if(!initProcessing && !preSetup) {
+                Loading();
+                InitPreLoad();
+                preSetup = true;
+                //calls all process functions for graphics
+            }
+            if(!initProcessing && preSetup) {
+                ProcessLetters();
+            }
+            //kicked off second, once images are generated
+            if(!stateInit && initProcessing) {
+                load = null;
+
+                InitStartState();
+                stateInit = true;
+            }
+            //ongoing menu processes
+            if(stateInit) {
+                TitleGlitch();
+            }
+
+
         }else if (gameState == 1) { //Setup
-            console.log("setup state");
+            if(!stateInit) {
+                console.log("Setup state init");
+                InitSetupState();
+                stateInit = true;
+            }
+            
         }else if (gameState == 2) { //Game
+            if(!stateInit) {
+                console.log("Game state init");
+                InitGameState();
+                DrawGrid();
+                stateInit = true;
+            }
         }else if (gameState == 3) { //Death
         }
     },
@@ -217,27 +245,31 @@ const loop = GameLoop({
             }
 
             blocksB.map(block => block.render());
-
-            //render out each object in the render queue
-            rQ.ui.forEach(element => {
-                element.obj.render();
-            });
-
+            
             if(titleObj) {
                 titleObj.render();
             }
             if(startObj) {
                 startObj.render();
             }
-
+            
+            
+            blocks.map(block => block.render());
+            
+        }else if (gameState == 1) { //Setup
+            
+        }else if (gameState == 2) { //Game
+            blocksB.map(block => block.render());
 
             blocks.map(block => block.render());
-
-        }else if (gameState == 1) { //Setup
-
-        }else if (gameState == 2) { //Game
         }else if (gameState == 3) { //Death
         }
+
+        //render out each object in the render queue
+        rQ.ui.forEach(element => {
+            element.obj.render();
+        });
+        
     }
 });
 

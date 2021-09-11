@@ -14,7 +14,7 @@ function DecomSpr(data, size, cvs) {
 
     bin = [];
     rows = [];
-    br ='';
+    br = '';
     //convert each hex element into binary
     for(var i=2; i< sD.length; i++) {
         hex = hexToBinary(sD[i]);
@@ -44,7 +44,8 @@ function DecomSpr(data, size, cvs) {
 //draws decompiled sprite to canvas
 //to be saved as image
 function DrawToCvs(ctx, size, rows) {
-    ctx.fillStyle = 'white';
+    //colour from register
+    ctx.fillStyle = cR[0];
 
     currX = 0;
     //loop through all pixel row strings
