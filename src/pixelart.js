@@ -1,28 +1,4 @@
 //Compressed pixel art
-//Multi Material #pixelart
-const pxM = [
-    "8,9,,,,1,,,1,D,,1,D,21,1,D,21,21,D,21,21,21,1,D,21,21,,1,D,21,,,1,D,,,,1",
-    "",
-    "",
-
-];
-
-//1-bit #pixelart
-const px1 = [
-    "8,9,1,6,18,60,80,60,18,6,3", //grid outline
-    "7,6,7D,FE,4F,F7,CA,80", // skull
-    "7,7,7D,8E,C,18,38,DF,0", // frame
-    "7,7,7D,FE,4C,1C,7D,DF,0", // heart frame
-    "5,6,21,8A,4E,60", // note
-    "6,5,49,20,21,78", // smile
-    "6,5,49,20,1E,84", // sad
-    "6,4,CD,20,3F", // angy
-    "6,7,49,20,3F,14,50,80", // fun
-    "6,4,49,20,3F", // puzzle
-    
-];
-
-//letters & numbers
 const tl = [
     "3,5,56,FA", //A 0
     "3,5,F7,5E", //B 1
