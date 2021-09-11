@@ -13,7 +13,7 @@ smLT = [];
 mdLT = [];
 lgLT = [];
 //sprite array
-//spRT = [];
+spRT = [];
 
 console.log("//Need to load " + tl.length*3 + " graphics sprites//");
 
@@ -21,17 +21,20 @@ console.log("//Need to load " + tl.length*3 + " graphics sprites//");
 function InitPreLoad() {
     for(var i=0; i< tl.length; i++) {
         //decompile
-        DecomSpr(tl[i], 5, cCVS);
+        DecomSpr(tl[i], 5, cCVS, i);
         CvstoImData(cCVS, i); 
     }
 }
 
-function ProcessSprites() {
-    for(var i=0; i< px1.length; i++) {
-        //decompile
-        DecomSpr(px1[i], 5, cCVS);
-        CvstoImData(cCVS, i); 
-    }
+//generate isometric sprite
+function GenSprites() {
+    //generate left sprite
+
+    //generate right sprite
+
+
+    //generate whole chunk as sprite
+
 }
 
 //Process Letters and Numbers 
@@ -66,7 +69,7 @@ function ProcessLetters(){
                             return;
                         }
                     } else if (smLT.length == tl.length) {
-                        //ProcessSprites();
+                        GenSprites();
                         initProcessing = true;
                         console.log("Images generated: " + (smLT.length + mdLT.length + lgLT.length));
                     }
@@ -82,19 +85,17 @@ function GenImAr(sz) {
         const Im = new Image();
         //kicking up issues
         Im.src = URL.createObjectURL(blobArr[i]);
-        //set image size 
-        Im.width = tl[i].charAt(0) * sz;
-        Im.height = tl[i].charAt(2) * sz;
+        //split data array again //use a dict here perhaps (in future) 
+        var sD = tl[i].split(",");
+
+        //handle dimensional values
+        Im.width = parseInt(sD[0]) * sz;
+        Im.height = parseInt(sD[1]) * sz;
         
         sz==sm ? smLT.push(Im) :
         sz==md ? mdLT.push(Im) :
         sz==lg ? lgLT.push(Im) :
         null 
-        
-        // if(sz == sm) { smLT.push(Im);
-        // } else if (sz == md) { mdLT.push(Im);
-        // } else if (sz == lg) { lgLT.push(Im);
-        // }
     }
 }
 
@@ -102,31 +103,34 @@ function GenImAr(sz) {
 function GenStr(str, x, y, obj, sz, rnd, rnd2) {
     var s = 0; //spacing
     var ar;
-    sz==sm ? ar = smLT :
-    sz==md ? ar = mdLT :
-    sz==lg ? ar = lgLT :
-    null 
-     
-    //get string
-    for(var i=0; i<str.length;i++) {
-        var n = str.charCodeAt(i) - 97;
-        if(ar[n]) { s += ar[n].width + sz;
-            //console.log("Rendering " + str[i] 
-            //    + " width is " + ar[n].width + " position: " + s);
-            (i == rnd || i == rnd2) ?
-                CreateLetter(ar[Math.floor(Rand(0, 35))], obj, s + x, y):
-                CreateLetter(ar[n], obj, s + x, y) 
-  
-        } else {  
-            var t = parseInt(str[i]);
-            if(Number.isInteger(t)) {
-                //console.log("its a number: " + t);
-                //console.log("adding space: " + ar[t+26].width + sz*4);
-                CreateLetter(ar[t+26], obj, s + x, y);
-                s += ar[t+26].width + sz;
-            } else {
-                s += sz*4;//blank or unknown
-                //console.log("symbol not found "+ str[i] + " charCodeAt: " + n);
+    sz==sm ? ar = smLT : sz==md ? ar = mdLT : sz==lg ? ar = lgLT : null 
+
+    if(Number.isInteger(str)) { //graphic?
+        console.log("graphic request detected");
+        CreateLetter(ar[str], obj, s + x, y) 
+    } else { //else string
+         
+        //get string
+        for(var i=0; i<str.length;i++) {
+            var n = str.charCodeAt(i) - 97;
+            if(ar[n]) { s += ar[n].width + sz;
+                //console.log("Rendering " + str[i] 
+                //    + " width is " + ar[n].width + " position: " + s);
+                (i == rnd || i == rnd2) ?
+                    CreateLetter(ar[Math.floor(Rand(0, 35))], obj, s + x, y):
+                    CreateLetter(ar[n], obj, s + x, y) 
+      
+            } else {  
+                var t = parseInt(str[i]);
+                if(Number.isInteger(t)) {
+                    //console.log("its a number: " + t);
+                    //console.log("adding space: " + ar[t+26].width + sz*4);
+                    CreateLetter(ar[t+26], obj, s + x, y);
+                    s += ar[t+26].width + sz;
+                } else {
+                    s += sz*4;//blank or unknown
+                    //console.log("symbol not found "+ str[i] + " charCodeAt: " + n);
+                }
             }
         }
     }
@@ -186,6 +190,16 @@ function InitStart() {
 
 //MAKE text object
 function MKTxt(str, x, y, fs) {
+    obj = GameObject({
+        x: x,
+        y: y,
+    });
+    //img2.src = URL.createObjectURL(blobArr[28]);
+    GenStr(str, 0, 0, obj, fs);
+    addRQUI(obj);
+}
+//MAKE text object
+function MKGr(str, x, y, fs) {
     obj = GameObject({
         x: x,
         y: y,

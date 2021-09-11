@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////
 
 //Initial import
-const { init, GameLoop, GameObject, Button, Sprite, initPointer, track, bindKeys, Text } = kontra;
+const { init, GameLoop, Scene, GameObject, Button, Sprite, initPointer, track, bindKeys, Text } = kontra;
 
 //Get components
 const { canvas, context } = init();
@@ -30,6 +30,26 @@ var titleObj = null;
 var startObj = null;
 var sceneChange = -1;
 var timer = 0;
+
+//Player
+player = null;
+helth = 10;
+
+//iso variables
+//number of elements
+gridX = 16;
+gridY = 16;
+//size of sprite
+isoX = 16; //18
+isoY = 9; //9 
+
+//Scene
+scene = null;
+chunks = [];
+isoCells = [];
+chunk0 = null;
+isoArea = null;
+isoHLT = null;
 
 var cCVS = document.getElementById('compileIMG');
 
@@ -155,13 +175,112 @@ function InitSetupState() {
 }
 
 function DrawGrid() {
-    console.log("grid");
+    //create healthbar
+    for(var i=0; i<helth; i++) {
+        MKGr(45, 610-(i*28), 2, md); //makes skull! 
+    }
+
+    chunk0  = Sprite({ 
+        x:150,
+        y:10,
+        width:gridX*(isoX*2),
+        height:gridY*(isoY*2),
+        //color: '#333333',
+        
+    });
+    addRQBG(isoArea);
+
+    //generate isogrid 
+    scene = Scene( {
+        id:'game',
+        children: [chunk0]
+    });
+
+    //scene.lookAt(chunk0); //camera change pos 
+    
+    BuildIsoGrid();
 }
+
+function BuildIsoGrid() {
+    
+    let offS = 0;
+    //init iso grid
+    for (let i=0; i<gridY; i++) {
+        for (let j=0; j<gridX; j++) {
+
+            let pos = ConvertISOToScreenPos(chunk0, i, j);
+            CreateIsoElement(pos[0], pos[1]);
+            //console.log(pos[0]);
+        }
+    }
+}
+
+function CreateIsoElement(xIn, yIn) {
+    const isoSQR = Sprite({
+        x:xIn,
+        y:yIn,
+        width:0,
+        image:smLT[46],
+    });
+
+    track(isoSQR);
+    isoCells.push(isoSQR);
+    chunk0.addChild(isoSQR);
+}
+
+//Handle mouse movement
+canvas.addEventListener('mousemove', event =>
+{
+    if(gameState == 2) {
+        let bound = canvas.getBoundingClientRect();
+        let xM = event.clientX - bound.left - canvas.clientLeft;
+        let yM = event.clientY - bound.top - canvas.clientTop;
+    
+        //console.count(xM + ", " + yM);
+        let pos = ConvertScreenToISOPos(chunk0, xM, yM);
+        var xtest = Math.ceil(pos[0]- 0.5);
+        var ytest = Math.round(pos[1]);
+    
+        //console.log('Grid location: ' + xtest + ', ' + ytest);
+        if(xtest <= 6) {
+            xtest = 6;
+        } else if (xtest >= 21) {
+            xtest = 21;
+        }
+        if(ytest <= -4) {
+            ytest = -4;
+        } else if (ytest >= 11) {
+            ytest = 11;
+        }
+    
+        let cursPos = ConvertISOToScreenPos(chunk0, xtest, ytest-0.25);
+    
+        isoHLT.x = cursPos[0]-14;
+        isoHLT.y = cursPos[1]-6;
+        // isoSpt.x = cursPos[0];
+        // isoSpt.y = cursPos[1];
+    }
+
+});
 
 //game zone
 function InitGameState() {
     MKTxt("subspace sector  00", 0, 10, sm);
     MKBt(10, 280, 32, 32, '#666', 69, "q")
+
+    console.log("grid generating");
+
+    //random tests
+    MKGr(36, 60, 50, md); //makes skull! 
+    //MKGr(47, 60, 100, sm); //make grid 
+    
+    //cursor location    
+    isoHLT = Sprite({
+        x:0,
+        y:0,
+        image:smLT[47],
+    });
+    addRQSP(isoHLT);
 }
 
 /////////////////////////////////////////////////////
@@ -176,7 +295,7 @@ const loop = GameLoop({
                 console.log("changing state");
                 SceneSwitch();
                 //clear UI 
-                clearUI();
+                clearRenderQ();
             }
         }
 
@@ -260,6 +379,17 @@ const loop = GameLoop({
             
         }else if (gameState == 2) { //Game
             blocksB.map(block => block.render());
+            
+            //render backgrounds
+            // rQ.bg.forEach(element => {
+            //     element.obj.render();
+            // });
+            //render sprites
+            rQ.sp.forEach(element => {
+                element.obj.render();
+            });
+            //render scene ??
+            scene.render();
 
             blocks.map(block => block.render());
         }else if (gameState == 3) { //Death

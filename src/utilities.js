@@ -32,3 +32,29 @@ function Lerp() {
 function Rand(min, max) {
     return Math.random() * (max - min) + min;
 }
+
+
+//Takes in Area for location 0,0 & local isometric point
+//Finds GLOBAL (screen) location of points xC/yC
+function ConvertISOToScreenPos(area, xL, yL) {
+
+    //calculate x offset into isometric
+    var xGlb = area.x + (xL-yL) * isoX;
+    //calculate y offset into isometric
+    var yGlb = area.y + (xL+yL) * isoY;
+    
+    return [xGlb, yGlb];
+
+}
+//Takes in area for location 0,0 and global point
+//Finds LOCAL (isometric) location of point
+function ConvertScreenToISOPos(area, GlX, GlY) {
+
+    //calculate x
+    var xLoc = ((GlY - area.y) / isoY + (GlX - area.x) / isoX) / 2;
+    //calculate y
+    var yLoc = ((GlY - area.y) / isoY - (GlX - area.x) / isoX) / 2;
+    
+    return [xLoc, yLoc];
+
+}

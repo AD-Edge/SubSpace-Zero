@@ -16,7 +16,11 @@ function addRQSP(obj) {
     rQ.sp.push({obj});
 }
 
-function clearUI() {
+function clearRenderQ() {
     rQ.ui.length = 0;
     rQ.ui = [];
+    rQ.bg.length = 0;
+    rQ.bg = [];
+    rQ.sp.length = 0;
+    rQ.sp = [];
 }

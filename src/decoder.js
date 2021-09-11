@@ -4,7 +4,7 @@ var blobArr = [];
 const mimeType = 'image/png';
 
 //Decompiles sprite data (HEX compress)
-function DecomSpr(data, size, cvs) {
+function DecomSpr(data, size, cvs, l) {
     //console.log("Decompiling: " + data);
     sD = data.split(",");
 
@@ -37,15 +37,32 @@ function DecomSpr(data, size, cvs) {
     //reset canvas and draw
     cvs.width = w * size;
     cvs.height = h * size;
-    DrawToCvs(cvs.getContext("2d"), size, rows);
+    
+    var c = SelectColor(l);
+    DrawToCvs(cvs.getContext("2d"), size, rows, c);
+
+}
+
+//used for quick and easy colour switching for certain images
+function SelectColor(l) {
+    return (
+     l == 46 ? ('#FFFFFF22') //isogrid outline
+    :l == 47 ? ('#FFFFFF99') //isogrid fill
+    : null
+    );
 
 }
 
 //draws decompiled sprite to canvas
 //to be saved as image
-function DrawToCvs(ctx, size, rows) {
+function DrawToCvs(ctx, size, rows, col) {
     //colour from register
-    ctx.fillStyle = cR[0];
+    if(col) {
+        ctx.fillStyle = col;
+        console.log("Custom fill style: " + col);
+    } else { //default to white
+        ctx.fillStyle = cR[0];
+    }
 
     currX = 0;
     //loop through all pixel row strings
