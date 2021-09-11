@@ -71,6 +71,7 @@ var cR = ["#FFF", "#000", "", "", "", "", ""]
 //GAME FUNCTIONS
 /////////////////////////////////////////////////////
 
+console.log(Rand(0,12)|0);
 
 //Create star particles
 function CreateStarBlock(array, d, s) {
@@ -92,18 +93,16 @@ function CreateStarBlock(array, d, s) {
 }
 
 function TitleGlitch() {
-    x = ~~mX;
-    x == 1 ? CrT() :x == 3 ? CrT() :x == 5 ? CrT(): null;
+    x=~~mX;x==x%6&&x&1&&CrT();
     mX <= 0 ? (gX = !gX,
-        gX ? (tX = Math.floor(Rand(0,12)), mX=Rand(0.3,10))
-        :(mX = Rand(5,10), tX=-1, CrT())
+    gX ? (tX = Rand(0,12)|0, mX=Rand(0.3,10))
+    :(mX = Rand(5,10), tX=-1, CrT())
     ):(mX -= 0.05);
-
-    z = ~~mZ;
-    z == 1 ? CrT() :z == 3 ? CrT() :z == 5 ? CrT(): null;
+        
+    z=~~mZ;z==z%6&&z&1&&CrT();
     mZ <= 0 ? (gZ = !gZ,
-        gZ ? (tZ = Math.floor(Rand(0,12)), mZ=Rand(0.3,10))
-        :(mZ = Rand(5,10), tZ=-1, CrT())
+    gZ ? (tZ = Rand(0,12)|0, mZ=Rand(0.3,10))
+    :(mZ = Rand(5,10), tZ=-1, CrT())
     ):(mZ -= 0.05);
 }
 function CrT() {
@@ -405,9 +404,31 @@ const loop = GameLoop({
 
 loop.start();
 
+
+
 /////////////////////////////////////////////////////
 //BUTTONS/INPUT
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+bindKeys(['left', 'a'], function(e) {
+    
+    
+}, 'keyup');
+
+bindKeys(['right', 'd'], function(e) {
+    
+    
+}, 'keyup');
+
+bindKeys(['up', 'w'], function(e) {
+    
+    
+}, 'keyup');
+
+bindKeys(['down', 's'], function(e) {
+    
+    
+}, 'keyup');
+
 
 /////////////////////////////////////////////////////
 //SFX
