@@ -1,18 +1,18 @@
 //Render Queue functions for kontraJS render loop
 
-let renderQueue = {
+let rQ = {
     ui: [],
-    background: [],
-    sprite: []
+    bg: [],
+    sp: []
 
 };
 
-function addToRenderQueueUI(obj) {
-    renderQueue.ui.push({obj});
+function addRQUI(obj) {
+    rQ.ui.push({obj});
 }
-function addToRenderQueueBG(obj) {
-    renderQueue.background.push({obj});
+function addRQBG(obj) {
+    rQ.bg.push({obj});
 }
-function addToRenderQueueSPR(obj) {
-    renderQueue.sprite.push({obj});
+function addRQSP(obj) {
+    rQ.sp.push({obj});
 }

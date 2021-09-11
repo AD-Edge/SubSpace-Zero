@@ -4,29 +4,28 @@ var blobArr = [];
 const mimeType = 'image/png';
 
 //Decompiles sprite data (HEX compress)
-function DecompileDrawSprite(data, size, cvs) {
+function DecomSpr(data, size, cvs) {
     //console.log("Decompiling: " + data);
-    var splitData = data.split(",");
+    sD = data.split(",");
 
     //get dimensions 
-    w = splitData[0];
-    h = splitData[1];
+    w = sD[0];
+    h = sD[1];
 
-    var bin = [];
-    var rows = [];
-    var br ='';
+    bin = [];
+    rows = [];
+    br ='';
     //convert each hex element into binary
-    for(var i=2; i< splitData.length; i++) {
-        var hex = hexToBinary(splitData[i]);
+    for(var i=2; i< sD.length; i++) {
+        hex = hexToBinary(sD[i]);
         bin[bin.length] = hex;
         //console.log("Hex to Binary: " + hex);
     }
 
     //convert each binary number into rows
     for(var j=0; j < bin.length; j++) { //loop all binary strings
-        var bstr = bin[j];
-        for(var k=0; k<bstr.length; k++) { //loop binary string
-            br += bstr.charAt(k);
+        for(var k=0; k<bin[j].length; k++) { //loop binary string
+            br += bin[j].charAt(k);
             //slice n dice
             if(br.length == w) {
                 //console.log("Binary section added to rows: " + br);
@@ -38,24 +37,24 @@ function DecompileDrawSprite(data, size, cvs) {
     //reset canvas and draw
     cvs.width = w * size;
     cvs.height = h * size;
-    DrawBinaryToCavas(cvs.getContext("2d"), size, rows);
+    DrawToCvs(cvs.getContext("2d"), size, rows);
 
 }
 
 //draws decompiled sprite to canvas
 //to be saved as image
-function DrawBinaryToCavas(ctx, size, rows) {
+function DrawToCvs(ctx, size, rows) {
     ctx.fillStyle = 'white';
 
-    var currX = 0;
+    currX = 0;
     //loop through all pixel row strings
     //needed = [1,0,1][1,1,1]... (previous setup)
     for (var i = 0; i < rows.length; i++) { //each row element
-        var pixels = rows[i]; //
-        var currY = 0;
+        pixels = rows[i]; //
+        currY = 0;
         //console.log("pixels: " + pixels);
         for (var y = 0; y < pixels.length; y++) {
-            var row = pixels[y];
+            row = pixels[y];
             //console.log("Drawing row: " + row);
             for (var x = 0; x < row.length; x++) {
                 if (row[x]==1) {
@@ -71,20 +70,15 @@ function DrawBinaryToCavas(ctx, size, rows) {
 }
 
 //First step in converting renderImage canvas to image data/compressed
-function ConvertCanvastoImageData(cnv, num) {
-    let cntxt = cnv.getContext("2d");
+function CvstoImData(cnv, num) {
+    cntxt = cnv.getContext("2d");
     imageData = cntxt.getImageData(0, 0, cnv.width, cnv.height);
-    
     // Convert canvas to Blob, then Blob to ArrayBuffer.
     cnv.toBlob((blob) => {
         const reader = new FileReader();
-        
         reader.addEventListener('loadend', () => {
             //Set array buffer
             const arrayBuffer = reader.result;
-            
-            //console.log("new blob: " + num);
-            
             //Blob content -> Image & URL
                 const blob = new Blob([arrayBuffer], {type: mimeType});        
                 blobArr[num] = blob;

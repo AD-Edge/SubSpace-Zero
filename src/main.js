@@ -31,22 +31,32 @@ var startObj = null;
 var sceneChange = -1;
 var timer = 0;
 
-var cmpIMG = document.getElementById('compileIMG');
+var cCVS = document.getElementById('compileIMG');
 
 //Array for stars
 var blocks = [];
 var blocksB = [];
 
-var tmX = 10; 
-var tmZ = 15;
-var tXX = 0 
-var tZZ = 0;
-var tgX = false; 
-var tgZ = false;
+var mX = 10; 
+var mZ = 15;
+var tX = 0 
+var tZ = 0;
+var gX = false; 
+var gZ = false;
 
 /////////////////////////////////////////////////////
 //GAME FUNCTIONS
 /////////////////////////////////////////////////////
+
+// var a = true;
+// a ? (console.log("true"), console.log("ahh")) : console.log("false");
+
+// var xx = 2.6;
+// x2 = Math.floor(xx);
+// x2 == 1 ? ClearTitle() 
+// :x2 == 3 ? ClearTitle()
+// :x2 == 5 ? ClearTitle(): null;
+
 
 //Create star particles
 function CreateStarBlock(array, d, s) {
@@ -68,47 +78,24 @@ function CreateStarBlock(array, d, s) {
 }
 
 function TitleGlitch() {
-    //get a title letter
-        if(tgX) {if((Math.floor(tmX))==1 || (Math.floor(tmX))==3 || (Math.floor(tmX))==5){
-                ClearTitle(); } }
-        if(tmX <= 0) {
-            tgX = !tgX;
-            if(tgX) { //glitch on
-                tXX = Math.floor(Rand(0,12));       
-                tmX = Rand(0.3,10);
-                //console.log("glitch reset");
-            } else { //glitch off
-                tmX = Rand(5,10);
-                tXX=-1;
-                ClearTitle();
-            }
-        } else {
-            tmX -= 0.05;
-        }
+    x = ~~mX;
+    x == 1 ? CrT() :x == 3 ? CrT() :x == 5 ? CrT(): null;
+    mX <= 0 ? (gX = !gX,
+        gX ? (tX = Math.floor(Rand(0,12)), mX=Rand(0.3,10))
+        :(mX = Rand(5,10), tX=-1, CrT())
+    ):(mX -= 0.05);
 
-        if(tgZ) {if((Math.floor(tmZ))==1 || (Math.floor(tmZ))==3 || (Math.floor(tmZ))==5){
-                ClearTitle(); } }
-        if(tmZ <= 0) {
-            tgZ = !tgZ;
-            if(tgZ) { //glitch on
-                tZZ = Math.floor(Rand(0,12));       
-                tmZ = Rand(0.3,10);
-                //console.log("glitch reset");
-            } else { //glitch off
-                tmZ = Rand(5,10);
-                tZZ=-1;
-                ClearTitle();
-            }
-        } else {
-            tmZ -= 0.1;
-        }
+    z = ~~mZ;
+    z == 1 ? CrT() :z == 3 ? CrT() :z == 5 ? CrT(): null;
+    mZ <= 0 ? (gZ = !gZ,
+        gZ ? (tZ = Math.floor(Rand(0,12)), mZ=Rand(0.3,10))
+        :(mZ = Rand(5,10), tZ=-1, CrT())
+    ):(mZ -= 0.05);
 }
 
-function ClearTitle() {
-
+function CrT() {
     titleObj = null;
-    InitTitleObject(tXX,tZZ);
-
+    InitTitle(tX,tZ);
 }
 
 function Loading() {
@@ -143,8 +130,8 @@ function sceneSwitch() {
 function InitGameState() {
     console.log('Init Game State');
     
-    InitTitleObject(-1, -1);
-    InitPlayButton();
+    InitTitle(-1, -1);
+    InitStart();
     InitTxtObj("13", 414, 300, sm);
     InitTxtObj("by alex delderfield for js  k", 196, 300, sm);
     //InitTxtObj("numbers   0123456789", 136, 250, sm);
@@ -232,7 +219,7 @@ const loop = GameLoop({
             blocksB.map(block => block.render());
 
             //render out each object in the render queue
-            renderQueue.ui.forEach(element => {
+            rQ.ui.forEach(element => {
                 element.obj.render();
             });
 
