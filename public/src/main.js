@@ -28,6 +28,8 @@ var initProcessing = false;
 
 var load = null;
 var titleObj = null;
+var conObj = null;
+var cntObj = null;
 var startObj = null;
 var sceneChange = -1;
 var timer = 0;
@@ -35,6 +37,9 @@ var timer = 0;
 //Player
 player = null;
 helth = 10;
+let cPlayerID = null;
+let players = []; //user data
+let opponents = []; //opponents to render
 
 //iso variables
 //number of elements
@@ -283,27 +288,27 @@ function InitGameState() {
 }
 
 function RefreshOnConnection() {
-    Area1 = null;
-    Area1Col = null;
+    // Area1 = null;
+    // Area1Col = null;
 
-    //temp for now, refresh primary players array
-    for(let i=0; i < players.length; i++) {
-        players[i].isActive = false;
-    }
-    players.length = 0;
-    players = []
+    // //temp for now, refresh primary players array
+    // for(let i=0; i < players.length; i++) {
+    //     players[i].isActive = false;
+    // }
+    // players.length = 0;
+    // players = []
 
-    for (var i = 0; i <= cells.length - 1; i++) {
-        //console.log('removing object from blocks');
-        cells[i].isActive = false;
-        //blocks[i].remove();
-    }
-    cells.length = 0;
-    cells = [];
+    // for (var i = 0; i <= cells.length - 1; i++) {
+    //     //console.log('removing object from blocks');
+    //     cells[i].isActive = false;
+    //     //blocks[i].remove();
+    // }
+    // cells.length = 0;
+    // cells = [];
 
-    //rebuild
-    RefreshPlayers();
-    BuildPixelGrid();
+    // //rebuild
+    // RefreshPlayers();
+    // BuildPixelGrid();
 }
 //Functions called by CLIENT 
 function SetClientPosition(id, x, y) {
@@ -323,82 +328,82 @@ function SetClientPosition(id, x, y) {
     
     //Update positions
     //set positions of client 
-    cPlayerUsr.xG = x;
-    cPlayerUsr.yG = y;
-    pX = (x * gDim) - (gDim/4);
-    pY = (y * gDim) - (gDim/4);
+    // cPlayerUsr.xG = x;
+    // cPlayerUsr.yG = y;
+    // pX = (x * gDim) - (gDim/4);
+    // pY = (y * gDim) - (gDim/4);
         
 }
 
 //for updating opponent positions
 function SetOpponentPosition(id, x, y) {
     
-    for(let i=0; i < players.length; i++) {
-        if(players[i].id == id) {
-            players[i].x = (x * gDim) - (gDim/4);
-            players[i].y = (y * gDim) - (gDim/4);
+    // for(let i=0; i < players.length; i++) {
+    //     if(players[i].id == id) {
+    //         players[i].x = (x * gDim) - (gDim/4);
+    //         players[i].y = (y * gDim) - (gDim/4);
             
-            console.log("Moving player " + id + " to pos: " + x + ", " + y);
+    //         console.log("Moving player " + id + " to pos: " + x + ", " + y);
 
-            RefreshPlayers()
-            return;
-        }
-    }
+    //         RefreshPlayers()
+    //         return;
+    //     }
+    // }
 
-    console.log("opponent not found: " + id);
+    // console.log("opponent not found: " + id);
     
 }
 //Create/Remove opponents
 function SetUser(id, val, x, y, rad) {  
-    if (val == 0) {
-        console.log("Remove opponent: " + id);
-        players.splice(players.indexOf(id), 1);
-        //console.log("player object deleted");
+    // if (val == 0) {
+    //     console.log("Remove opponent: " + id);
+    //     players.splice(players.indexOf(id), 1);
+    //     //console.log("player object deleted");
 
-        RefreshPlayers();
+    //     RefreshPlayers();
         
-    } else if (val == 1) {
-        console.log("Adding new opponent: " + id);
+    // } else if (val == 1) {
+    //     console.log("Adding new opponent: " + id);
         
-        const user = new User(id, x, y, rad);
-        players.push(user);
-        //console.log("new player object created, x:" + x + ", " + y);
+    //     const user = new User(id, x, y, rad);
+    //     players.push(user);
+    //     //console.log("new player object created, x:" + x + ", " + y);
 
-        // for(let i=0; i < players.length; i++) {
-        //     console.log("SetUser() listing user obj #" + i + ": " + players[i].id);
-        // }
+    //     // for(let i=0; i < players.length; i++) {
+    //     //     console.log("SetUser() listing user obj #" + i + ": " + players[i].id);
+    //     // }
 
-        RefreshPlayers();
+    //     RefreshPlayers();
 
-    } else {
-        console.log("ERROR Unknown User Setting Requested??")
-    }
+    // } else {
+    //     console.log("ERROR Unknown User Setting Requested??")
+    // }
 }
 
 //Draw Combat Zone around player
 function SetCombatZone(id) {
-    console.log("Combat zone started by: " + id);
+    // console.log("Combat zone started by: " + id);
     
-    //draw grid circle around client player
-    for(let i=0; i < players.length; i++) {
-        //find player in players array
-        if(players[i].id == id) {
-            //get x & y loc, get radius
-            var x = players[i].xG;  
-            var y = players[i].yG;  
-            var rad = players[i].attRad;
-            //iterate over HxW square area
-            for(let h = -rad+1; h < rad; h++) {
-                for (let w = -rad+1; w < rad; w++) {
-                    //check points & fill
-                    if((Math.abs(h))+(Math.abs(w)) <= rad) {
-                        SetCombatSquare(x+w, y+h);
-                    }
-                }
-            }
-            return;
-        }
-    }
+    // //draw grid circle around client player
+    // for(let i=0; i < players.length; i++) {
+    //     //find player in players array
+    //     if(players[i].id == id) {
+    //         //get x & y loc, get radius
+    //         var x = players[i].xG;  
+    //         var y = players[i].yG;  
+    //         var rad = players[i].attRad;
+    //         //iterate over HxW square area
+    //         for(let h = -rad+1; h < rad; h++) {
+    //             for (let w = -rad+1; w < rad; w++) {
+    //                 //check points & fill
+    //                 if((Math.abs(h))+(Math.abs(w)) <= rad) {
+    //                     SetCombatSquare(x+w, y+h);
+    //                 }
+    //             }
+    //         }
+    //         return;
+    //     }
+    // }
 }
 
 
@@ -449,7 +454,11 @@ const loop = GameLoop({
             //kicked off second, once images are generated
             if(!stateInit && initProcessing) {
                 load = null;
-
+                if(cPlayerID == null) {
+                    SetMessage();
+                } else {
+                    SetMessage("session connected");
+                }
                 InitStartState();
                 stateInit = true;
             }
@@ -477,6 +486,10 @@ const loop = GameLoop({
         }
     },
     render: () => {
+
+        conObj ? conObj.render(): null;
+        cntObj ? cntObj.render(): null;
+
         if(gameState == 0) { //Start/Menu
             if(load) {
                 load.render();
@@ -525,6 +538,27 @@ const loop = GameLoop({
 loop.start();
 
 
+/**
+ * Client side user class
+ */
+ class User {
+
+	/**
+	 * @param {Socket} socket
+	 */
+	constructor(id, x, y, rad) {
+		this.id = id;
+		//this.x = (x * gDim) - (gDim/4); //screen space X
+		//this.y = (y * gDim) - (gDim/4); //screen space Y
+        this.xG = x; //grid/local X
+        this.yG = y; //grid/local Y
+        this.combat = false;
+        this.attRad = rad;
+
+        //CreateUserObj(this.x, this.y);
+	}
+
+}
 
 /////////////////////////////////////////////////////
 //BUTTONS/INPUT

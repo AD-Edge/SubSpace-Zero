@@ -159,6 +159,23 @@ function InitTitle(rnd, rnd2) {
     //GenerateString("abcdefghijklmnopqrstuvwxyz", mdLT, md);
 
 }
+function SetMessage(text) {
+    conObj = null;
+    cntObj = null;
+
+    //test string hosting object
+    conObj = GameObject({
+        x: 4,
+        y: 10,
+    });
+    if(text==null) {
+        console.log("set message running from ui.js");
+        GenStr("session not connected", 0, 0, conObj, sm, -1, -1);
+    } else {
+        GenStr(text, 0, 0, conObj, sm, -1, -1);
+    }
+
+}
 
 function InitStart() {
     //test string hosting object

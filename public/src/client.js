@@ -83,25 +83,12 @@
         //     setMessageConnect("Currenly Online Players: " + count);
         // });
 
-        socket.on("win", () => {
-            points.win++;
-            displayScore("You win!");
-        });
-
-        socket.on("lose", () => {
-            points.lose++;
-            displayScore("You die!");
-        });
-
-        socket.on("draw", () => {
-            points.draw++;
-            displayScore("Draw! wat?");
-        });
-
         socket.on("updateCount", (arg) => {
             console.log("connected: " + arg);
             count = arg;
-            setMessageConnect(count);
+            //setMessageConnect(count);
+            SetMessage("session connected");
+            //SetConnectMsg("session connected");
         });
 
         socket.on("setUser", (arg1, arg2, arg3, arg4, arg5) => {
@@ -128,27 +115,29 @@
         
         socket.on("end", () => {
             //disableButtons();
-            setMessageConnect(count);
+            //setMessageConnect(count);
         });
 
         socket.on("connect", () => {
-            enableButtons();
-            setMessage("[Session Connected]" );
-            setMessageConnect(count);
+            //enableButtons();
+            //setMessage("[Session Connected]" );
+            SetMessage("session connected");
+            //setMessageConnect(count);
         });
         
         socket.on("disconnect", () => {
-            disableButtons();
-            setMessage("[Connection lost]");
-            setMessageConnect("Attempting to reconnect...")
+            //disableButtons();
+            //setMessage("[Connection lost]");
+            SetMessage("connection lost");
+            //setMessageConnect("Attempting to reconnect...")
             
             RefreshOnConnection();
         });
 
         socket.on("error", () => {
-            disableButtons();
-            setMessage("[Connection error]");
-            setMessageConnect("Attempting to reconnect...")
+            //disableButtons();
+            SetMessage("connection error");
+            //setMessageConnect("Attempting to reconnect...")
             //setMessageConnect("Currenly Online Players: n/a")
         });
 
