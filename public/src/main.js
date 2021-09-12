@@ -7,7 +7,8 @@
 ////////////////////////////////////////////////////
 
 //Initial import
-const { init, GameLoop, Scene, GameObject, Button, Sprite, initPointer, track, bindKeys, Text } = kontra;
+const { init, GameLoop, Scene, GameObject, Button, 
+    Sprite, initPointer, track, bindKeys, Text } = kontra;
 
 //Get components
 const { canvas, context } = init();
@@ -201,7 +202,6 @@ function DrawGrid() {
 }
 
 function BuildIsoGrid() {
-    
     let offS = 0;
     //init iso grid
     for (let i=0; i<gridY; i++) {
@@ -281,6 +281,126 @@ function InitGameState() {
     });
     addRQSP(isoHLT);
 }
+
+function RefreshOnConnection() {
+    Area1 = null;
+    Area1Col = null;
+
+    //temp for now, refresh primary players array
+    for(let i=0; i < players.length; i++) {
+        players[i].isActive = false;
+    }
+    players.length = 0;
+    players = []
+
+    for (var i = 0; i <= cells.length - 1; i++) {
+        //console.log('removing object from blocks');
+        cells[i].isActive = false;
+        //blocks[i].remove();
+    }
+    cells.length = 0;
+    cells = [];
+
+    //rebuild
+    RefreshPlayers();
+    BuildPixelGrid();
+}
+//Functions called by CLIENT 
+function SetClientPosition(id, x, y) {
+
+    //init creation
+    if(cPlayerID == null) { 
+        cPlayerID = id; //set ID
+        console.log("Setup Client " + cPlayerID + " at pos: " + x + ", " + y);
+        const user = new User(id, x, y, 5);
+
+        cPlayerUsr = user;
+        players.push(user);
+
+    } else {
+        console.log("Client object already added, why is this being called again?");
+    }
+    
+    //Update positions
+    //set positions of client 
+    cPlayerUsr.xG = x;
+    cPlayerUsr.yG = y;
+    pX = (x * gDim) - (gDim/4);
+    pY = (y * gDim) - (gDim/4);
+        
+}
+
+//for updating opponent positions
+function SetOpponentPosition(id, x, y) {
+    
+    for(let i=0; i < players.length; i++) {
+        if(players[i].id == id) {
+            players[i].x = (x * gDim) - (gDim/4);
+            players[i].y = (y * gDim) - (gDim/4);
+            
+            console.log("Moving player " + id + " to pos: " + x + ", " + y);
+
+            RefreshPlayers()
+            return;
+        }
+    }
+
+    console.log("opponent not found: " + id);
+    
+}
+//Create/Remove opponents
+function SetUser(id, val, x, y, rad) {  
+    if (val == 0) {
+        console.log("Remove opponent: " + id);
+        players.splice(players.indexOf(id), 1);
+        //console.log("player object deleted");
+
+        RefreshPlayers();
+        
+    } else if (val == 1) {
+        console.log("Adding new opponent: " + id);
+        
+        const user = new User(id, x, y, rad);
+        players.push(user);
+        //console.log("new player object created, x:" + x + ", " + y);
+
+        // for(let i=0; i < players.length; i++) {
+        //     console.log("SetUser() listing user obj #" + i + ": " + players[i].id);
+        // }
+
+        RefreshPlayers();
+
+    } else {
+        console.log("ERROR Unknown User Setting Requested??")
+    }
+}
+
+//Draw Combat Zone around player
+function SetCombatZone(id) {
+    console.log("Combat zone started by: " + id);
+    
+    //draw grid circle around client player
+    for(let i=0; i < players.length; i++) {
+        //find player in players array
+        if(players[i].id == id) {
+            //get x & y loc, get radius
+            var x = players[i].xG;  
+            var y = players[i].yG;  
+            var rad = players[i].attRad;
+            //iterate over HxW square area
+            for(let h = -rad+1; h < rad; h++) {
+                for (let w = -rad+1; w < rad; w++) {
+                    //check points & fill
+                    if((Math.abs(h))+(Math.abs(w)) <= rad) {
+                        SetCombatSquare(x+w, y+h);
+                    }
+                }
+            }
+            return;
+        }
+    }
+}
+
 
 /////////////////////////////////////////////////////
 //PRIMARY GAME LOOP

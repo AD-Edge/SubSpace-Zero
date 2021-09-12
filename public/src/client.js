@@ -1,8 +1,5 @@
 "use strict";
 
-import { SetClientPosition, SetOpponentPosition, SetUser,
-    SetCombatZone, RefreshOnConnection } from './main.js';
-
 (function () {
 
     let socket, //Socket.IO client
