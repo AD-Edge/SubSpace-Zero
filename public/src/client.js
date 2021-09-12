@@ -77,12 +77,6 @@
      */
     function bind() {
 
-        // socket.on("start", () => {
-        //     enableButtons();
-        //     setMessage("[Combat Round " + (points.win + points.lose + points.draw + 1) + "]");
-        //     setMessageConnect("Currenly Online Players: " + count);
-        // });
-
         socket.on("updateCount", (arg) => {
             console.log("connected: " + arg);
             count = arg;
@@ -123,6 +117,7 @@
             //setMessage("[Session Connected]" );
             SetMessage("session connected");
             //setMessageConnect(count);
+            //RefreshPlayers();
         });
         
         socket.on("disconnect", () => {
@@ -141,10 +136,10 @@
             //setMessageConnect("Currenly Online Players: n/a")
         });
 
-        for (let i = 0; i < buttons.length; i++) {
-            ((button, move) => {
-                button.addEventListener("click", function (e) {
-                    //disableButtons();
+            for (let i = 0; i < buttons.length; i++) {
+                ((button, move) => {
+                    button.addEventListener("click", function (e) {
+                        //disableButtons();
                     socket.emit("move", move);
                 }, false);
             })(buttons[i], i + 1);
@@ -161,7 +156,6 @@
         connect = document.getElementById("connect");
         score = document.getElementById("score");
         count = 0;
-        //disableButtons();
         bind();
     }
 

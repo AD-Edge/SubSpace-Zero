@@ -21,7 +21,6 @@ function configUser(user, val) {
 				users[i].setUser(user.socket.id, val, user.x, user.y, user.attRad); 
 				// also give new user preexisting user
 				user.setUser(users[i].socket.id, val, users[i].x, users[i].y, user.attRad); 
-				
 			}		
 		}
 	}
@@ -131,8 +130,8 @@ function updateConnectedCount() {
 
 //set new client start location/setup
 function setRandomStart(user) {
-	var randX = Math.floor(getRandomArbitrary(1, 39));
-	var randY = Math.floor(getRandomArbitrary(1, 19));
+	var randX = Math.floor(getRandomArbitrary(1, 16));
+	var randY = Math.floor(getRandomArbitrary(1, 16));
 	console.log("spawn loc X:" + randX + ', Y:' + randY);
 
 	if (randX != null && randY != null) {
@@ -191,14 +190,11 @@ class User {
 			this.updateLoc(this.x, this.y);
 			updateUserLocation(this);
 		} else if (move == 3) {
-			//console.log("Combat Engage: " + move);
-			initiateCombat(this);
-		} else if (move == 4) {
 			//console.log("Move Right: " + move);
 			this.x++;
 			this.updateLoc(this.x, this.y);
 			updateUserLocation(this);
-		} else if (move == 5) {
+		} else if (move == 4) {
 			//console.log("Move Down: " + move);
 			this.y++;
 			this.updateLoc(this.x, this.y);
@@ -279,6 +275,7 @@ module.exports = {
 		setRandomStart(user);
 
 		configUser(user, 1); //add new
+
 		updateConnectedCount();
 		
 

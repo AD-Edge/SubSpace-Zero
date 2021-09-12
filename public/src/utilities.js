@@ -39,7 +39,7 @@ function Rand(min, max) {
 function ConvertISOToScreenPos(area, xL, yL) {
 
     //calculate x offset into isometric
-    var xGlb = area.x + (xL-yL) * isoX;
+    var xGlb = (area.x) + (xL-yL) * isoX;
     //calculate y offset into isometric
     var yGlb = area.y + (xL+yL) * isoY;
     
@@ -58,3 +58,29 @@ function ConvertScreenToISOPos(area, GlX, GlY) {
     return [xLoc, yLoc];
 
 }
+
+function SetToGrid(x, y) {
+    //get isometric position from given coords 
+        let pos = ConvertScreenToISOPos(chunk0, x, y);
+        var xtest = Math.ceil(pos[0]- 0.5);
+        var ytest = Math.round(pos[1]);
+    
+        //console.log('Grid location: ' + xtest + ', ' + ytest);
+        if(xtest <= 6) { //restrict
+            xtest = 6;
+        } else if (xtest >= 21) {
+            xtest = 21;
+        }
+        if(ytest <= -4) {
+            ytest = -4;
+        } else if (ytest >= 11) {
+            ytest = 11;
+        }
+    
+        //convert to screen location
+        let cursPos = ConvertISOToScreenPos(chunk0, xtest, ytest);
+        
+        return [cursPos[0]+4, cursPos[1]-2];
+}
+
+//6, -4

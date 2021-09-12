@@ -24,3 +24,8 @@ function clearRenderQ() {
     rQ.sp.length = 0;
     rQ.sp = [];
 }
+
+function clearRenderQSpt() {
+    rQ.sp.length = 0;
+    rQ.sp = [];
+}
