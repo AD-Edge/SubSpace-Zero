@@ -41,25 +41,6 @@
     }
 
     /**
-     * Set message text
-     * @param {string} text
-     */
-    function setMessage(text) {
-        message.innerHTML = text;
-    }
-    function setMessageConnect(text) {
-        if(text == isNaN) {
-            connect.innerHTML = text;
-        } else if (text == 1) {
-            connect.innerHTML = text + " Player Currently Online";
-        } else if (text > 1) {
-            connect.innerHTML = text + " Players Currently Online";
-        } else {
-            connect.innerHTML = "oops.. something broke...";
-        }
-    }
-
-    /**
      * Set score text
      * @param {string} text
      */
@@ -80,9 +61,9 @@
         socket.on("updateCount", (arg) => {
             console.log("connected: " + arg);
             count = arg;
-            //setMessageConnect(count);
+            SetMessageConnect(count);
             SetMessage("session connected");
-            //SetConnectMsg("session connected");
+            
         });
 
         socket.on("setUser", (arg1, arg2, arg3, arg4, arg5) => {
@@ -93,6 +74,7 @@
         socket.on("updateLoc", (arg1, arg2, arg3) => {
             console.log("new location for " + arg1 + " X:" + arg2 + ', Y:' + arg3);
             SetClientPosition(arg1, arg2, arg3);
+            test();
         });
         
         socket.on("updateUserLoc", (arg1, arg2, arg3) => {
@@ -109,14 +91,15 @@
         
         socket.on("end", () => {
             //disableButtons();
-            //setMessageConnect(count);
+            SetMessageConnect(count);
         });
 
         socket.on("connect", () => {
             //enableButtons();
             //setMessage("[Session Connected]" );
             SetMessage("session connected");
-            //setMessageConnect(count);
+            SetMessageConnect(count);
+            FUCK();
             //RefreshPlayers();
         });
         
@@ -124,7 +107,7 @@
             //disableButtons();
             //setMessage("[Connection lost]");
             SetMessage("connection lost");
-            //setMessageConnect("Attempting to reconnect...")
+            SetMessageConnect("attempting to reconnect...");
             
             RefreshOnConnection();
         });
@@ -132,8 +115,7 @@
         socket.on("error", () => {
             //disableButtons();
             SetMessage("connection error");
-            //setMessageConnect("Attempting to reconnect...")
-            //setMessageConnect("Currenly Online Players: n/a")
+            SetMessageConnect("attempting to reconnect...");
         });
 
             for (let i = 0; i < buttons.length; i++) {

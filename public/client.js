@@ -86,9 +86,8 @@
         socket.on("updateCount", (arg) => {
             console.log("connected: " + arg);
             count = arg;
-            //setMessageConnect(count);
+            SetMessageConnect(count);
             SetMessage("session connected");
-            //SetConnectMsg("session connected");
         });
 
         socket.on("setUser", (arg1, arg2, arg3, arg4, arg5) => {
@@ -115,21 +114,19 @@
         
         socket.on("end", () => {
             //disableButtons();
-            //setMessageConnect(count);
+            SetMessageConnect(count);
         });
 
         socket.on("connect", () => {
             //enableButtons();
-            //setMessage("[Session Connected]" );
             SetMessage("session connected");
-            //setMessageConnect(count);
+            SetMessageConnect(count);
         });
         
         socket.on("disconnect", () => {
             //disableButtons();
-            //setMessage("[Connection lost]");
             SetMessage("connection lost");
-            //setMessageConnect("Attempting to reconnect...")
+            SetMessageConnect("attempting to reconnect...")
             
             RefreshOnConnection();
         });
@@ -137,8 +134,8 @@
         socket.on("error", () => {
             //disableButtons();
             SetMessage("connection error");
-            //setMessageConnect("Attempting to reconnect...")
-            //setMessageConnect("Currenly Online Players: n/a")
+            SetMessageConnect("attempting to reconnect...")
+            
         });
 
         for (let i = 0; i < buttons.length; i++) {

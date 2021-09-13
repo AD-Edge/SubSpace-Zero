@@ -23,11 +23,6 @@ function hexToBinary(hex) {
     return ("00000000" + (parseInt(hex, 16)).toString(2)).substr(-8);
 }
 
-//Lerp
-function Lerp() {
-
-}
-
 //Random gen
 function Rand(min, max) {
     return Math.random() * (max - min) + min;

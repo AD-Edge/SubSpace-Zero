@@ -329,8 +329,8 @@ function CreateUserObj(xIn, yIn) {
 }
 
 function RefreshOnConnection() {
-    chunk0 = null;
-    DrawGrid();
+    // chunk0 = null;
+    // DrawGrid();
 
     //temp for now, refresh primary players array
     for(let i=0; i < players.length; i++) {
@@ -534,15 +534,14 @@ const loop = GameLoop({
                     fstTm = -1;
             }
 
-
         }else if (gameState == 3) { //Death
 
         }
     },
     render: () => {
-
-        conObj ? conObj.render(): null;
-        cntObj ? cntObj.render(): null;
+        
+        if(conObj)conObj.render();
+        if(cntObj)cntObj.render();
 
         if(gameState == 0) { //Start/Menu
             if(load) {

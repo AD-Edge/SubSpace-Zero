@@ -26,17 +26,6 @@ function InitPreLoad() {
     }
 }
 
-//generate isometric sprite
-function GenSprites() {
-    //generate left sprite
-
-    //generate right sprite
-
-
-    //generate whole chunk as sprite
-
-}
-
 //Process Letters and Numbers 
 function ProcessLetters(){
     if(isProc) {
@@ -69,7 +58,6 @@ function ProcessLetters(){
                             return;
                         }
                     } else if (smLT.length == tl.length) {
-                        GenSprites();
                         initProcessing = true;
                         console.log("Images generated: " + (smLT.length + mdLT.length + lgLT.length));
                     }
@@ -159,12 +147,29 @@ function InitTitle(rnd, rnd2) {
     //GenerateString("abcdefghijklmnopqrstuvwxyz", mdLT, md);
 
 }
-function SetMessage(text) {
-    conObj = null;
-    cntObj = null;
 
+function SetMessageConnect(text) {
+    console.log("updating count!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    cntObj=null;
+    cntObj=GameObject({
+        x: 200,
+        y: 10,
+    });
+    if(text == isNaN) {
+        GenStr(text.toString(), 0, 0, cntObj, sm, -1, -1);
+    } else if (text == 1) {
+        GenStr(text.toString() + "player online", 0, 0, cntObj, sm, -1, -1);
+    } else if (text > 1) {
+        GenStr(text.toString() + "players online", 0, 0, cntObj, sm, -1, -1);
+    } else {
+        GenStr("na", 0, 0, cntObj, sm, -1, -1);
+    }
+}
+
+function SetMessage(text) {
+    conObj=null;
     //test string hosting object
-    conObj = GameObject({
+    conObj=GameObject({
         x: 4,
         y: 10,
     });
@@ -174,7 +179,6 @@ function SetMessage(text) {
     } else {
         GenStr(text, 0, 0, conObj, sm, -1, -1);
     }
-
 }
 
 function InitStart() {
