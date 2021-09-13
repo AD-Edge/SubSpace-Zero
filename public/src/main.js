@@ -318,7 +318,7 @@ function CreateUserObj(xIn, yIn) {
         x: p[0],
         y: p[1],
         //color: 'white',
-        image:smLT[50],
+        image:smLT[51],
     });
     
     chunk0.addChild(userObj);
@@ -354,12 +354,15 @@ function SetClientPosition(id, x, y) {
         cPlayerUsr = user;
         players.push(user);
     } 
+    var p = ConvertISOToScreenPos(chunk0, cPlayerUsr.x -0.5, cPlayerUsr.y -0.5);
 
-    cPlayerUsr.x = x; 
+    if(x<=16) {
+        cPlayerUsr.x = x; 
+        pX= p[0];
+
+    }
     cPlayerUsr.y = y; 
 
-    var p = ConvertISOToScreenPos(chunk0, cPlayerUsr.x -0.5, cPlayerUsr.y -0.5);
-    pX= p[0];
     pY= p[1];
     console.log("pX, pY: " + pX + ", " + pY);
 

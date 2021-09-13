@@ -48,6 +48,8 @@ function SelectColor(l) {
     return (
      l == 46 ? ('#FFFFFF22') //isogrid outline
     :l == 47 ? ('#FFFFFF99') //isogrid fill
+    :l == 45 ? ('#0088FF') //isogrid fill
+    :l == 51 ? ('#880000') //isogrid fill
     : null
     );
 
