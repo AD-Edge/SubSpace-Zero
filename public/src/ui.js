@@ -149,20 +149,22 @@ function InitTitle(rnd, rnd2) {
 }
 
 function SetMessageConnect(text) {
-    console.log("updating count!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    cntObj=null;
-    cntObj=GameObject({
-        x: 200,
-        y: 10,
-    });
-    if(text == isNaN) {
-        GenStr(text.toString(), 0, 0, cntObj, sm, -1, -1);
-    } else if (text == 1) {
-        GenStr(text.toString() + "player online", 0, 0, cntObj, sm, -1, -1);
-    } else if (text > 1) {
-        GenStr(text.toString() + "players online", 0, 0, cntObj, sm, -1, -1);
-    } else {
-        GenStr("na", 0, 0, cntObj, sm, -1, -1);
+    if(gameState == 2) {
+        console.log("updating count!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        cntObj=null;
+        cntObj=GameObject({
+            x: 200,
+            y: 10,
+        });
+        if(text == isNaN) {
+            GenStr(text.toString(), 0, 0, cntObj, sm, -1, -1);
+        } else if (text == 1) {
+            GenStr(text.toString() + "player online", 0, 0, cntObj, sm, -1, -1);
+        } else if (text > 1) {
+            GenStr(text.toString() + "players online", 0, 0, cntObj, sm, -1, -1);
+        } else {
+            GenStr("na", 0, 0, cntObj, sm, -1, -1);
+        }
     }
 }
 
