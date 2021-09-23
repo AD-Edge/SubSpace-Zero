@@ -22,7 +22,12 @@ Slide from the 1-bit compression step in the process:
 ## Heres what worked and what didnt:
 
 ### Problems
--adding soon-
+
+* Complexity/Scope: My usual issue in gamejams - setting a realistic goal and sticking to it. So yeh in hindsight attempting multiplayer was a bad idea this year & I should have focused on a simpler single player game with this pixel art system as a neat bonus. That became apparant pretty quick. If I haddnt put so much time into working out the multiplayer code right in the middle of the jam, I probably would have pivoted away from that and made a single player game, but towards the end of the gamejam I committed to the multiplayer idea and tried to make it work. 
+
+* Bugs: Along with the scope of the game and complexity being so high it just lead to a lot of hours being burnt chasing bugs. This was especially bad in the final few days when I really needed to be working-on/finishing the gameplay & code-golfing, but was instead tracking down  issues which took many hours to debug.
+
+* Byte compression: The final submission came in at around 17kb, and thats with most of the incomplete combat code removed. I clearly needed a spare day or two at the end of the gamejam to focus on optimisations and compressing the code wherever possible.
 
 ### Wins 
 -adding soon- 
