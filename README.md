@@ -12,7 +12,7 @@ Safe to say I didnt get very far with that idea and quit the jam early. But I di
 So then JS13K came along again, and the idea started buzzing around in my head again, until I decided I'd take another stab at it. 
 And this year, even though I didnt finish a game worthy of submitting to a judged category - I did at least get this generated pixelart process working start to finish! (+ a few other things)
 
-If youd like to see the entire breakdown of the generated pixel art process, see this thread on twitter as I wont be going into huge detail here (plus theres a bunch of videos/gifs posted in the twitter thead): https://twitter.com/Alex_ADEdge/status/1440918766058020867
+If youd like to see the entire breakdown of the generated pixel art process, see this thread on twitter as I wont be going into huge detail here (plus theres a bunch of videos/gifs posted in the twitter thead): **https://twitter.com/Alex_ADEdge/status/1440918766058020867**
 
 Slide from the multi-colour compression step in the process:
 ![bulbasaur conversion](docs/bulba_conversion.png)
@@ -38,15 +38,18 @@ I dont think '13B1PACE 8ERO' is the title... but close try.
 
 * Pixel art compression & generation system: Clearly the focus of this gamejam, since Ive mentioned and tweeted about it so many times, but this really was the #1 goal other than actually finishing a game. And it turned out pretty well! See the twitter-thread breakdown mentioned previously for more details, and the 'whats next' section coming up to see what Im doing with this next.
 
-* Projects & Practice: I worked on 3 different areas during the jam, + one mini-game prior to the jam as a warmup/learning-expereience for both KontraJS and javascript. All together this was a ton of learning and experience.
-These projects were:
+* Projects & Practice: I worked on several different areas during the jam, + one mini-game prior to the jam as a warmup/learning-expereience for both KontraJS and javascript. All together this was a ton of learning and experience! I havent worked with javascript for gamedev a whole lot until the 2020 js13k gamejam, so working all all of these elements was a whole lot of learning. 
+ 
+The projects were:
+   * [minPIX](https://github.com/AD-Edge/minPIX) - The pixel editor Ive developed for compressing pixel art, started just before the jam and was properly exporting compressed pixel art towards the end of the jam, this is also where I experimented with and developed the decompiling and rendering code for the graphics I ended up with
+   * [TestMultiplayer](https://github.com/AD-Edge/TestMP) - Test multiplayer code, based on the example provided by js13k and expanded to include multiplayer movement around a grid structure, I also started on the combat game loop here but didnt get too far with it in the gamejam
+   * Isometric pixel art (this repo) - Started out as a graphical isometric test, I reworked the isometric platformer I attempted to make for the 2020 js13k. Initially I started out with image sprites, but towards the end of the jam I worked in my system for compressed pixel art, then revamped everything when I added in the multiplayer code from the TestMultiplayer project. Overall lots of experimenting and learning about creating an isometric game with a 2D game engine - which turned into the final resulting game. 
+   * [Space Game](https://github.com/AD-Edge/SpaceGameTest) - The pre-gamejam game I worked on, tried to make it a neat demo which had many elements of a complete game, from UI to Sprites, multi-platform controls and sfx & music.
 
-    * minPIX - the pixel editor for compressing pixel art, started before the jam and working towards the end of the jam, this is also where I experimented with and developed the decompiling and rendering code
-    * TestMP - test multiplayer code, based on the example provided by js13k and expanded to include multiplayer movement around a grid structure, I also started on the combat game loop here but didnt get too far with it
-    * Isometric pixel art -
+![spacegame](docs/spacegame2.gif)
 
 * Code-Golf: Not something Ive properly attempted before, but Ive always appreciated the idea of code-golfing (making functional code with the fewest possible characters/processes possible, ie like in golf how youre meant to sink the ball in as few shots as possible)
-I was able to learn a few neat tricks and at least 
+I was able to learn a few neat tricks and at least got hands on with some of this process, which was pretty rewarding and something I certainly want to get into more in future.
 
 ![codegolf](docs/codegolf.png)
 
