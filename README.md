@@ -10,7 +10,25 @@ Safe to say I didnt get very far with that idea and quit the jam early. But I di
 So then JS13K came along again, and the idea started buzzing around in my head again, until I decided I'd take another stab at it. 
 And this year, even though I didnt finish a game worthy of submitting to a judged category - I did at least get this generated pixelart process working start to finish! (+ a few other things)
 
-If youd like to see the entire breakdown of the generated pixel art, see this thread on twitter: 
+If youd like to see the entire breakdown of the generated pixel art process, see this thread on twitter as I wont be going into huge detail here (plus theres a bunch of videos/gifs posted in the twitter thead): https://twitter.com/Alex_ADEdge/status/1440918766058020867
 
-//image example 
+Slide from the multi-colour compression step in the process:
+![skull conversion](docs/bulba_conversion.png)
+
+Slide from the 1-bit compression step in the process:
 ![skull conversion](docs/skull_conversion.png)
+
+
+Heres what worked and what didnt:
+
+### Problems
+-adding soon-
+
+### Wins 
+-adding soon- 
+
+### Overall
+-adding soon- 
+
+### Whats Next 
+-adding soon- 
