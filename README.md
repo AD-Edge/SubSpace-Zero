@@ -1,7 +1,7 @@
 # js13k_2021
 Repository for my 2021 #js13k game entry - SUBSPACE ZERO
 
-![finaltitle](docs/finaltitle.png)
+![finaltitle](docs/finaltitle.gif)
 
 ## POST MORTEM
 
@@ -31,7 +31,7 @@ Slide from the 1-bit compression step in the process:
 
 * Byte compression: The final submission came in at around 17kb, and thats with most of the incomplete combat code removed. I clearly needed a spare day or two at the end of the gamejam to focus on optimisations and compressing the code wherever possible.
 
-![abitbroken](docs/broken.png)
+![abitbroken](docs/broken.gif)
 I dont think '13B1PACE 8ERO' is the title... but close try.
 
 ### Wins 
