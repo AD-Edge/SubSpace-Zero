@@ -19,7 +19,7 @@ Slide from the 1-bit compression step in the process:
 ![skull conversion](docs/skull_conversion.png)
 
 
-Heres what worked and what didnt:
+## Heres what worked and what didnt:
 
 ### Problems
 -adding soon-
