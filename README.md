@@ -32,6 +32,7 @@ Slide from the 1-bit compression step in the process:
 * Byte compression: The final submission came in at around 17kb, and thats with most of the incomplete combat code removed. I clearly needed a spare day or two at the end of the gamejam to focus on optimisations and compressing the code wherever possible.
 
 ![abitbroken](docs/broken.gif)
+
 I dont think '13B1PACE 8ERO' is the title... but close try.
 
 ### Wins 
@@ -51,7 +52,7 @@ The projects were:
 * Code-Golf: Not something Ive properly attempted before, but Ive always appreciated the idea of code-golfing (making functional code with the fewest possible characters/processes possible, ie like in golf how youre meant to sink the ball in as few shots as possible)
 I was able to learn a few neat tricks and at least got hands on with some of this process, which was pretty rewarding and something I certainly want to get into more in future.
 
-![codegolf](docs/codegolf.png)
+![codegolf](docs/codegolf2.png)
 
 ### Overall
 -adding soon- 
