@@ -9,7 +9,7 @@ Repository for my 2021 #js13k game entry - SUBSPACE ZERO
 Generally every gamejam I participate in I try to focus on a certain idea or feature thats been bouncing around my head. 
 Seeing this years JS13K coming up it reminded me of what I *attempted* last year in my first js13k - which was a pixel art isometric game that would generate its own pixel art from super-compressed data files.
 Safe to say I didnt get very far with that idea and quit the jam early. But I did at least get enough of that idea working in javascript to know it was possible. 
-So then JS13K came along again, and the idea started buzzing around in my head again, until I decided I'd take another stab at it. 
+So then JS13K came along again, and the idea started buzzing around in my head, until I decided I'd take another stab at it. 
 And this year, even though I didnt finish a game worthy of submitting to a judged category - I did at least get this generated pixelart process working start to finish! (+ a few other things)
 
 If youd like to see the entire breakdown of the generated pixel art process, see this thread on twitter as I wont be going into huge detail here (plus theres a bunch of videos/gifs posted in the twitter thead): **https://twitter.com/Alex_ADEdge/status/1440918766058020867**
@@ -63,3 +63,5 @@ I'm also going to continue to work on Subspace-Zero for a little while, moving f
 minPIX is going to also be something I want to develop further, many more plans for that software. I know I can push the compression further and add a few other features, not to mention neatening up the UI and making it look and work a bit more professionally. But this is the most exciting thing, as I mentioned at the start of this post-mortem this kind of compressed pixel art has been bouncing around in my head for a while now - mostly because I have a game in the works which will need to utilize that very thing. So Ive effectively been working on that project this whole gamejam as well, and will soon be creating an importer for Unity to get this pixel art working in this primary game project.
 
 -till next gamejam
+
+![finalgrid](docs/finalgrid.png)
