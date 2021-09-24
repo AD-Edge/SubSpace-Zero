@@ -15,10 +15,10 @@ And this year, even though I didnt finish a game worthy of submitting to a judge
 If youd like to see the entire breakdown of the generated pixel art process, see this thread on twitter as I wont be going into huge detail here (plus theres a bunch of videos/gifs posted in the twitter thead): **https://twitter.com/Alex_ADEdge/status/1440918766058020867**
 
 Slide from the 1-bit compression step in the process:
-![skull conversion](docs/skull_conversion.png)
+![skull conversion](skull_conversion.png)
 
 Slide from the multi-colour compression step in the process:
-![bulbasaur conversion](docs/bulba_conversion.png)
+![bulbasaur conversion](bulba_conversion.png)
 
 ## Heres what worked and what didnt:
 
@@ -30,7 +30,7 @@ Slide from the multi-colour compression step in the process:
 
 * Byte compression: The final submission came in at around 17kb, and thats with most of the incomplete combat code removed. I clearly needed a spare day or two at the end of the gamejam to focus on optimisations and compressing the code wherever possible.
 
-![abitbroken](docs/broken.gif)
+![abitbroken](broken.gif)
 
 I dont think '13B1PACE 8ERO' is the title... but close try.
 
@@ -46,12 +46,12 @@ The projects were:
    * Isometric pixel art (this repo) - Started out as a graphical isometric test, I reworked the isometric platformer I attempted to make for the 2020 js13k. Initially I started out with image sprites, but towards the end of the jam I worked in my system for compressed pixel art, then revamped everything when I added in the multiplayer code from the TestMultiplayer project. Overall lots of experimenting and learning about creating an isometric game with a 2D game engine - which turned into the final resulting game. 
    * [Space Game](https://github.com/AD-Edge/SpaceGameTest) - The pre-gamejam game I worked on, tried to make it a neat demo which had many elements of a complete game, from UI to Sprites, multi-platform controls and sfx & music.
 
-![spacegame](docs/spacegame2.gif)
+![spacegame](spacegame2.gif)
 
 * Code-Golf: Not something Ive properly attempted before, but Ive always appreciated the idea of code-golfing (making functional code with the fewest possible characters/processes possible, ie like in golf how youre meant to sink the ball in as few shots as possible)
 I was able to learn a few neat tricks and at least got hands on with some of this process, which was pretty rewarding and something I certainly want to get into more in future.
 
-![codegolf](docs/codegolf2.png)
+![codegolf](codegolf2.png)
 
 ### Overall
 Disappointed I didnt finish a final playable game that was submission worthy. But it was still a great jam to partipate in and I ended up ticking off some pretty big milestones. Solving problems and bringing together ideas which have been bouncing around in the mind for over a year is always a win!
@@ -65,4 +65,4 @@ minPIX is going to also be something I want to develop further, many more plans 
 
 -till next gamejam
 
-![finalgrid](docs/finalgrid.png)
+![finalgrid](finalgrid.png)
